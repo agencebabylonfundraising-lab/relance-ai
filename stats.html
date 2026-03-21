@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>relance.ai — Statistiques & Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563eb; --blue-dark: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe;
+      --success: #16a34a; --success-light: #dcfce7;
+      --warning: #f59e0b; --warning-light: #fef9c3;
+      --danger: #dc2626; --danger-light: #fee2e2;
+      --orange: #ea580c; --orange-light: #fff7ed;
+      --purple: #7c3aed; --purple-light: #f5f3ff;
+      --bg: #f1f5f9; --white: #ffffff;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
+      --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563;
+      --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
+      --radius: 12px; --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--gray-900); min-height:100vh; font-size:13px; }
+
+    /* NAV */
+    nav { background:var(--white); border-bottom:1px solid var(--gray-200); padding:0 32px; height:52px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:100; }
+    .nav-logo { display:flex; align-items:center; gap:7px; text-decoration:none; }
+    .logo-icon { width:26px; height:26px; background:var(--blue); border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .logo-icon svg { width:13px; height:13px; fill:white; }
+    .logo-text { font-size:15px; font-weight:800; color:var(--gray-900); letter-spacing:-.4px; }
+    .logo-text span { color:var(--blue); }
+    .nav-links { display:flex; gap:4px; margin-left:20px; }
+    .nav-link { font-size:12px; font-weight:500; color:var(--gray-600); padding:5px 10px; border-radius:6px; text-decoration:none; }
+    .nav-link:hover { background:var(--gray-100); color:var(--gray-900); }
+    .nav-link.active { background:var(--blue-light); color:var(--blue); font-weight:600; }
+    .nav-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
+    .btn-sm { font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; border:none; cursor:pointer; }
+    .btn-ghost { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
+    .btn-primary { background:var(--blue); color:white; }
+    .select-period { font-size:11px; padding:5px 10px; border:1px solid var(--gray-200); border-radius:6px; background:white; color:var(--gray-700); cursor:pointer; }
+
+    /* LAYOUT */
+    .page { max-width:1200px; margin:0 auto; padding:24px; }
+    .page-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+    .page-title { font-size:22px; font-weight:800; color:var(--gray-900); letter-spacing:-.4px; }
+    .page-sub { font-size:13px; color:var(--gray-500); flex:1; }
+    .period-tabs { display:flex; gap:4px; }
+    .period-tab { font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer; border:1px solid var(--gray-200); background:white; color:var(--gray-600); }
+    .period-tab.active { background:var(--blue); color:white; border-color:var(--blue); }
+
+    /* GRID */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+
+    /* CARDS */
+    .card { background:white; border:1px solid var(--gray-200); border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); }
+    .card-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-500); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+    .card-title-icon { font-size:14px; margin-right:4px; }
+    .card-action { font-size:10px; font-weight:600; color:var(--blue); cursor:pointer; text-transform:none; letter-spacing:0; }
+
+    /* KPI tiles */
+    .kpi-tile { background:white; border:1px solid var(--gray-200); border-radius:var(--radius-sm); padding:14px 16px; box-shadow:var(--shadow); }
+    .kpi-label { font-size:11px; color:var(--gray-500); font-weight:500; margin-bottom:4px; }
+    .kpi-value { font-size:24px; font-weight:800; color:var(--gray-900); letter-spacing:-.5px; margin-bottom:2px; }
+    .kpi-delta { font-size:11px; font-weight:600; }
+    .delta-up { color:var(--success); }
+    .delta-down { color:var(--danger); }
+    .delta-neutral { color:var(--gray-500); }
+    .kpi-sub { font-size:10px; color:var(--gray-400); }
+
+    /* Tables */
+    table { width:100%; border-collapse:collapse; }
+    th { text-align:left; padding:7px 10px; background:var(--gray-50); color:var(--gray-500); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.3px; border-bottom:1px solid var(--gray-200); }
+    td { padding:8px 10px; border-bottom:1px solid var(--gray-100); font-size:12px; color:var(--gray-700); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:var(--gray-50); }
+
+    /* Progress bars */
+    .pbar-wrap { display:flex; align-items:center; gap:8px; }
+    .pbar { height:6px; border-radius:10px; background:var(--gray-200); flex:1; overflow:hidden; }
+    .pbar-fill { height:100%; border-radius:10px; transition:width .5s; }
+    .pbar-label { font-size:11px; font-weight:600; min-width:40px; text-align:right; }
+    .pb-blue { background:var(--blue); }
+    .pb-green { background:var(--success); }
+    .pb-orange { background:var(--orange); }
+    .pb-red { background:var(--danger); }
+    .pb-yellow { background:var(--warning); }
+
+    /* Status badges */
+    .badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; display:inline-flex; align-items:center; gap:3px; }
+    .badge-ok { background:var(--success-light); color:var(--success); }
+    .badge-warn { background:var(--warning-light); color:#92400e; }
+    .badge-danger { background:var(--danger-light); color:var(--danger); }
+    .badge-info { background:var(--blue-light); color:var(--blue-dark); }
+    .badge-purple { background:var(--purple-light); color:var(--purple); }
+
+    /* Compliance section */
+    .compliance-card { background:white; border:1px solid #bbf7d0; border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); border-left:4px solid var(--success); }
+    .compliance-item { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--gray-100); }
+    .compliance-item:last-child { border-bottom:none; }
+    .compliance-item-label { font-size:12px; color:var(--gray-700); display:flex; align-items:center; gap:8px; }
+    .compliance-item-icon { font-size:14px; }
+    .compliance-item-value { font-size:12px; font-weight:700; color:var(--gray-900); }
+
+    /* Timing analysis */
+    .timing-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--gray-100); }
+    .timing-row:last-child { border-bottom:none; }
+    .timing-slot { font-size:12px; font-weight:600; color:var(--gray-800); min-width:120px; }
+    .timing-metrics { display:flex; gap:20px; flex:1; align-items:center; }
+    .timing-metric { text-align:center; }
+    .timing-metric-val { font-size:14px; font-weight:700; color:var(--gray-900); }
+    .timing-metric-lbl { font-size:9px; color:var(--gray-400); }
+
+    /* Duration chart */
+    .dur-chart { display:flex; flex-direction:column; gap:8px; }
+    .dur-row { display:flex; align-items:center; gap:10px; }
+    .dur-label { font-size:11px; font-weight:600; color:var(--gray-700); min-width:90px; }
+    .dur-bar-wrap { flex:1; display:flex; gap:2px; height:16px; border-radius:4px; overflow:hidden; }
+    .dur-seg { height:100%; display:flex; align-items:center; justify-content:center; font-size:9px; color:white; font-weight:700; transition:flex .5s; }
+    .dur-info { font-size:10px; color:var(--gray-500); min-width:80px; text-align:right; }
+
+    /* Agent table */
+    .agent-avatar { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700; }
+
+    /* Section heading */
+    .section-heading { font-size:16px; font-weight:800; color:var(--gray-900); letter-spacing:-.3px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+    .section-heading-sep { width:1px; height:18px; background:var(--gray-200); }
+    .section-heading-sub { font-size:12px; font-weight:400; color:var(--gray-500); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:var(--gray-300); border-radius:4px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+    <span class="logo-text">relance<span>.ai</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link">🎯 Interface agent</a>
+    <a href="scripts.html" class="nav-link">📋 Scripts</a>
+    <a href="stats.html" class="nav-link active">📊 Stats</a>
+  </div>
+  <div class="nav-right">
+    <div class="period-tabs">
+      <div class="period-tab active">7 jours</div>
+      <div class="period-tab">30 jours</div>
+      <div class="period-tab">Trimestre</div>
+    </div>
+    <button class="btn-sm btn-ghost">⬇️ Export</button>
+    <button class="btn-sm btn-primary">📋 Rapport client</button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- TOP KPIs -->
+  <div class="grid-4">
+    <div class="kpi-tile">
+      <div class="kpi-label">📞 Appels total</div>
+      <div class="kpi-value">847</div>
+      <div class="kpi-delta delta-up">↑ +12% vs semaine précédente</div>
+      <div class="kpi-sub">Dont 312 anti-churn · 218 welcome · 178 upgrade · 139 réactivation</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">💚 Dons sauvés</div>
+      <div class="kpi-value">€9 840</div>
+      <div class="kpi-delta delta-up">↑ +8% vs semaine précédente</div>
+      <div class="kpi-sub">Anti-churn: 82 dons · Réactiv: 21 retours</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">🎯 Taux de contact</div>
+      <div class="kpi-value">68%</div>
+      <div class="kpi-delta delta-up">↑ +4 pts en créneaux optimaux</div>
+      <div class="kpi-sub">Optimal: 74% · Hors créneau: 54%</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">✅ Taux de succès</div>
+      <div class="kpi-value">31%</div>
+      <div class="kpi-delta delta-neutral">— Stable vs benchmark secteur 25–35%</div>
+      <div class="kpi-sub">Anti-churn: 33% · Upgrade: 22% · Réactiv: 17%</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Performance par type + Agents -->
+  <div class="grid-2" style="margin-bottom:16px;">
+
+    <!-- Performance par type -->
+    <div class="card">
+      <div class="card-title"><span>📊 Performance par type d'appel</span><span class="card-action">Voir détail →</span></div>
+      <table>
+        <tr>
+          <th>Type</th><th>Appels</th><th>Reach</th><th>Succès</th><th>Revenu</th><th>vs Benchmark</th>
+        </tr>
+        <tr>
+          <td><span class="badge badge-danger">🔴 Anti-churn</span></td>
+          <td>312</td>
+          <td>71%</td>
+          <td><strong style="color:var(--success)">33%</strong></td>
+          <td>€5 280</td>
+          <td><span class="badge badge-ok">✅ Dans cible</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-info">👋 Welcome</span></td>
+          <td>218</td>
+          <td>84%</td>
+          <td><strong style="color:var(--success)">96%</strong></td>
+          <td>+18 pts rétention</td>
+          <td><span class="badge badge-ok">✅ Excellent</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-ok">⬆️ Upgrade</span></td>
+          <td>178</td>
+          <td>65%</td>
+          <td><strong style="color:var(--warning)">22%</strong></td>
+          <td>€3 120</td>
+          <td><span class="badge badge-warn">⚠️ Limite basse</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-warn" style="background:var(--orange-light);color:var(--orange)">🔄 Réactivation</span></td>
+          <td>139</td>
+          <td>58%</td>
+          <td><strong style="color:var(--orange)">17%</strong></td>
+          <td>€1 440</td>
+          <td><span class="badge badge-ok">✅ Dans cible</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Agents -->
+    <div class="card">
+      <div class="card-title"><span>👥 Agents — 7 derniers jours</span><span class="card-action">Voir équipe →</span></div>
+      <table>
+        <tr>
+          <th>#</th><th>Agent</th><th>Appels</th><th>Succès</th><th>Durée moy.</th><th>Dons sauvés</th>
+        </tr>
+        <tr>
+          <td>🥇</td>
+          <td><div style="display:flex;align-items:center;gap:6px;"><div class="agent-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">LM</div> Lucas M.</div></td>
+          <td>142</td><td><strong style="color:var(--success)">38%</strong></td><td>8.2 min</td>
+          <td><span style="font-weight:700;color:var(--success)">€1 920</span></td>
+        </tr>
+        <tr>
+          <td>🥈</td>
+          <td><div style="display:flex;align-items:center;gap:6px;"><div class="agent-avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">SC</div> Sophie C.</div></td>
+          <td>128</td><td><strong style="color:var(--success)">34%</strong></td><td>9.1 min</td>
+          <td><span style="font-weight:700;color:var(--success)">€1 680</span></td>
+        </tr>
+        <tr>
+          <td>🥉</td>
+          <td><div style="display:flex;align-items:center;gap:6px;"><div class="agent-avatar" style="background:linear-gradient(135deg,#f59e0b,#ea580c)">AB</div> Amina B.</div></td>
+          <td>114</td><td><strong style="color:var(--warning)">27%</strong></td><td>10.4 min</td>
+          <td><span style="font-weight:700;color:var(--success)">€1 320</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><div style="display:flex;align-items:center;gap:6px;"><div class="agent-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">TD</div> Thierry D.</div></td>
+          <td>98</td><td><strong style="color:var(--warning)">24%</strong></td><td>11.8 min</td>
+          <td><span style="font-weight:700;color:var(--success)">€960</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><div style="display:flex;align-items:center;gap:6px;"><div class="agent-avatar" style="background:var(--gray-400)">NK</div> Naomi K.</div></td>
+          <td>87</td><td><strong style="color:var(--danger)">19%</strong></td><td>14.2 min</td>
+          <td><span style="font-weight:700;color:var(--warning)">€720</span> <span style="font-size:9px;color:var(--danger)">⚠️ Formation</span></td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ════════════════ TIMING ANALYSIS ════════════════ -->
+  <div class="section-heading">
+    ⏰ Analyse des créneaux d'appel
+    <div class="section-heading-sep"></div>
+    <span class="section-heading-sub">Impact des fenêtres optimales (Mar/Jeu · 9h30–11h30 · 16h30–19h)</span>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+
+    <!-- Timing par créneau -->
+    <div class="card">
+      <div class="card-title"><span>📅 Répartition appels par créneau</span></div>
+      <div style="margin-bottom:12px;">
+        <div class="timing-row">
+          <div class="timing-slot">🟢 Créneau optimal</div>
+          <div class="timing-metrics">
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--success)">342</div><div class="timing-metric-lbl">appels</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--success)">74%</div><div class="timing-metric-lbl">taux contact</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--success)">36%</div><div class="timing-metric-lbl">taux succès</div></div>
+          </div>
+          <span class="badge badge-ok">+20 pts contact</span>
+        </div>
+        <div class="timing-row">
+          <div class="timing-slot">🟡 Acceptable</div>
+          <div class="timing-metrics">
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--warning)">285</div><div class="timing-metric-lbl">appels</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--warning)">64%</div><div class="timing-metric-lbl">taux contact</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--warning)">29%</div><div class="timing-metric-lbl">taux succès</div></div>
+          </div>
+          <span class="badge badge-warn">Standard</span>
+        </div>
+        <div class="timing-row">
+          <div class="timing-slot">🔴 Hors créneau</div>
+          <div class="timing-metrics">
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--danger)">220</div><div class="timing-metric-lbl">appels</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--danger)">54%</div><div class="timing-metric-lbl">taux contact</div></div>
+            <div class="timing-metric"><div class="timing-metric-val" style="color:var(--danger)">21%</div><div class="timing-metric-lbl">taux succès</div></div>
+          </div>
+          <span class="badge badge-danger">–33% succès</span>
+        </div>
+      </div>
+      <div style="background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:var(--radius-sm);padding:10px 12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue-dark);margin-bottom:4px;">💡 Recommandation</div>
+        <div style="font-size:11px;color:var(--gray-700);">Déplacer 26% des appels hors créneau vers les fenêtres optimales permettrait d'ajouter <strong>~€1 200/semaine</strong> en dons sauvés sans augmenter le volume d'appels.</div>
+      </div>
+    </div>
+
+    <!-- Timing par jour -->
+    <div class="card">
+      <div class="card-title"><span>📆 Taux de contact par jour de semaine</span></div>
+      <table>
+        <tr><th>Jour</th><th>Appels</th><th>Contact</th><th>Succès</th><th>Perf. relative</th></tr>
+        <tr><td>Lundi</td><td>98</td><td>61%</td><td>26%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-yellow" style="width:61%"></div></div><span class="pbar-label" style="color:var(--warning)">–10%</span></div></td></tr>
+        <tr><td><strong>Mardi ⭐</strong></td><td>182</td><td>76%</td><td>37%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-green" style="width:76%"></div></div><span class="pbar-label" style="color:var(--success)">+15%</span></div></td></tr>
+        <tr><td>Mercredi</td><td>124</td><td>70%</td><td>31%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-blue" style="width:70%"></div></div><span class="pbar-label" style="color:var(--blue)">+8%</span></div></td></tr>
+        <tr><td><strong>Jeudi ⭐</strong></td><td>165</td><td>73%</td><td>35%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-green" style="width:73%"></div></div><span class="pbar-label" style="color:var(--success)">+12%</span></div></td></tr>
+        <tr><td>Vendredi</td><td>112</td><td>52%</td><td>20%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-red" style="width:52%"></div></div><span class="pbar-label" style="color:var(--danger)">–20%</span></div></td></tr>
+        <tr><td>Samedi</td><td>166</td><td>66%</td><td>28%</td><td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill pb-yellow" style="width:66%"></div></div><span class="pbar-label" style="color:var(--warning)">Var.</span></div></td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ════════════════ CALL DURATION ANALYSIS ════════════════ -->
+  <div class="section-heading">
+    ⏱️ Analyse des durées d'appel
+    <div class="section-heading-sep"></div>
+    <span class="section-heading-sub">Distribution vs zones optimales — Cadre Claire</span>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">
+      <span>📊 Distribution durée par type d'appel</span>
+      <span class="card-action">Exporter →</span>
+    </div>
+    <div class="dur-chart">
+      <div style="display:flex;gap:12px;margin-bottom:8px;font-size:10px;">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--gray-300);display:inline-block"></span> Trop court</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--success);display:inline-block"></span> Zone optimale</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--warning);display:inline-block"></span> Trop long</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--danger);display:inline-block"></span> Excessif</span>
+      </div>
+      <div class="dur-row">
+        <div class="dur-label">👋 Welcome</div>
+        <div class="dur-bar-wrap">
+          <div class="dur-seg" style="background:var(--gray-300);flex:8" title="< 2 min">8%</div>
+          <div class="dur-seg" style="background:var(--success);flex:72" title="4-7 min">72%</div>
+          <div class="dur-seg" style="background:var(--warning);flex:15" title="7-10 min">15%</div>
+          <div class="dur-seg" style="background:var(--danger);flex:5" title="> 10 min">5%</div>
+        </div>
+        <div class="dur-info"><strong style="color:var(--success)">72%</strong> en zone opt.</div>
+      </div>
+      <div class="dur-row">
+        <div class="dur-label">🔴 Anti-churn</div>
+        <div class="dur-bar-wrap">
+          <div class="dur-seg" style="background:var(--gray-300);flex:14" title="< 4 min">14%</div>
+          <div class="dur-seg" style="background:var(--success);flex:54" title="6-10 min">54%</div>
+          <div class="dur-seg" style="background:var(--warning);flex:24" title="10-15 min">24%</div>
+          <div class="dur-seg" style="background:var(--danger);flex:8" title="> 15 min">8%</div>
+        </div>
+        <div class="dur-info"><strong style="color:var(--warning)">54%</strong> en zone opt.</div>
+      </div>
+      <div class="dur-row">
+        <div class="dur-label">⬆️ Upgrade</div>
+        <div class="dur-bar-wrap">
+          <div class="dur-seg" style="background:var(--gray-300);flex:18" title="< 5 min">18%</div>
+          <div class="dur-seg" style="background:var(--success);flex:48" title="8-13 min">48%</div>
+          <div class="dur-seg" style="background:var(--warning);flex:26" title="13-18 min">26%</div>
+          <div class="dur-seg" style="background:var(--danger);flex:8" title="> 18 min">8%</div>
+        </div>
+        <div class="dur-info"><strong style="color:var(--warning)">48%</strong> en zone opt.</div>
+      </div>
+      <div class="dur-row">
+        <div class="dur-label">🔄 Réactivation</div>
+        <div class="dur-bar-wrap">
+          <div class="dur-seg" style="background:var(--gray-300);flex:12" title="< 5 min">12%</div>
+          <div class="dur-seg" style="background:var(--success);flex:44" title="10-15 min">44%</div>
+          <div class="dur-seg" style="background:var(--warning);flex:32" title="15-20 min">32%</div>
+          <div class="dur-seg" style="background:var(--danger);flex:12" title="> 20 min">12%</div>
+        </div>
+        <div class="dur-info"><strong style="color:var(--warning)">44%</strong> en zone opt.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;background:var(--warning-light);border:1px solid #fde68a;border-radius:var(--radius-sm);padding:10px 12px;">
+      <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:3px;">⚠️ Point d'attention — Anti-churn & Upgrade</div>
+      <div style="font-size:11px;color:var(--gray-700);">32% des appels anti-churn dépassent 10 min (zone suboptimale). Cela traduit généralement un manque de structure ou une résistance non résolue. Action : session de coaching sur la phase 5 (Proposition) avec les agents concernés.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ CONFORMITÉ & RGPD ════════════════ -->
+  <div class="section-heading">
+    🔒 Conformité & RGPD
+    <div class="section-heading-sep"></div>
+    <span class="section-heading-sub">Suivi en temps réel — Base légale, droits, Bloctel</span>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+
+    <div class="compliance-card">
+      <div class="card-title" style="color:var(--success)"><span>✅ Statut conformité global</span><span class="card-action" style="color:var(--blue)">Générer rapport DPO →</span></div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">📋</span> Campagnes avec base légale documentée</div>
+        <div class="compliance-item-value"><span class="badge badge-ok">4/4 ✅</span></div>
+      </div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">🚫</span> Droits d'opposition traités (30 derniers jours)</div>
+        <div class="compliance-item-value"><span class="badge badge-ok">7 traités · 0 en attente</span></div>
+      </div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">📅</span> Prochaine revue RGPD planifiée</div>
+        <div class="compliance-item-value"><span class="badge badge-info">15 juin 2026</span></div>
+      </div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">🔍</span> Bloctel — Vérification des fichiers tiers</div>
+        <div class="compliance-item-value"><span class="badge badge-ok">Non requis (donateurs propres)</span></div>
+      </div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">📼</span> Consentement enregistrement appel</div>
+        <div class="compliance-item-value"><span class="badge badge-warn">Protocole à vérifier</span></div>
+      </div>
+      <div class="compliance-item">
+        <div class="compliance-item-label"><span class="compliance-item-icon">⏰</span> Appels hors horaire légal (8h–20h)</div>
+        <div class="compliance-item-value"><span class="badge badge-ok">0 cette semaine ✅</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📊 Bases légales par campagne</span></div>
+      <table>
+        <tr><th>Campagne</th><th>Type</th><th>Base légale</th><th>Fichier</th><th>Statut</th></tr>
+        <tr>
+          <td>MSF — Retention Q1</td>
+          <td><span class="badge badge-danger">Anti-churn</span></td>
+          <td>Art. 6.1.b — Contrat</td>
+          <td>Donateurs propres</td>
+          <td><span class="badge badge-ok">✅ OK</span></td>
+        </tr>
+        <tr>
+          <td>MSF — Welcome Mars</td>
+          <td><span class="badge badge-info">Welcome</span></td>
+          <td>Art. 6.1.b — Contrat</td>
+          <td>Donateurs propres</td>
+          <td><span class="badge badge-ok">✅ OK</span></td>
+        </tr>
+        <tr>
+          <td>WWF — Upgrade Printemps</td>
+          <td><span class="badge badge-ok">Upgrade</span></td>
+          <td>Art. 6.1.f — Int. légitime</td>
+          <td>Donateurs propres</td>
+          <td><span class="badge badge-ok">✅ OK</span></td>
+        </tr>
+        <tr>
+          <td>UNICEF — Réactivation</td>
+          <td><span class="badge badge-warn" style="background:var(--orange-light);color:var(--orange)">Réactivation</span></td>
+          <td>Art. 6.1.f — Int. légitime</td>
+          <td>Donateurs propres</td>
+          <td><span class="badge badge-ok">✅ OK</span></td>
+        </tr>
+      </table>
+      <div style="margin-top:10px;padding:8px 12px;background:var(--blue-light);border-radius:var(--radius-sm);font-size:11px;color:var(--blue-dark);">
+        ℹ️ Toutes les campagnes opèrent sur des fichiers "donateurs propres" — exemption Bloctel confirmée (doctrine DGCCRF 2023).
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════ CAMPAGNE DETAIL ════════════════ -->
+  <div class="section-heading">
+    📈 Évolution hebdomadaire — Dons sauvés
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title"><span>💰 Revenus préservés par semaine (anti-churn + réactivation)</span><span class="card-action">6 dernières semaines →</span></div>
+    <div style="display:flex;gap:8px;align-items:flex-end;height:100px;padding:0 10px;">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--blue-mid);border-radius:4px 4px 0 0;height:45px;"></div>
+        <div style="font-size:9px;color:var(--gray-400)">S-5</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-700)">€7.2k</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--blue-mid);border-radius:4px 4px 0 0;height:55px;"></div>
+        <div style="font-size:9px;color:var(--gray-400)">S-4</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-700)">€8.1k</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--blue);border-radius:4px 4px 0 0;height:58px;"></div>
+        <div style="font-size:9px;color:var(--gray-400)">S-3</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-700)">€8.6k</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--blue);border-radius:4px 4px 0 0;height:62px;"></div>
+        <div style="font-size:9px;color:var(--gray-400)">S-2</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-700)">€9.1k</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--blue-dark);border-radius:4px 4px 0 0;height:67px;"></div>
+        <div style="font-size:9px;color:var(--gray-400)">S-1</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-700)">€9.1k</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:100%;background:var(--success);border-radius:4px 4px 0 0;height:72px;position:relative;"></div>
+        <div style="font-size:9px;color:var(--success);font-weight:700">Cette sem.</div>
+        <div style="font-size:11px;font-weight:800;color:var(--success)">€9.8k ↑</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:16px;">
+      <div style="font-size:11px;color:var(--gray-500)">Tendance : <strong style="color:var(--success)">+36% sur 6 semaines</strong></div>
+      <div style="font-size:11px;color:var(--gray-500)">Objectif mensuel : <strong>€40k</strong> · Projection : <strong style="color:var(--success)">€42.5k ✅</strong></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

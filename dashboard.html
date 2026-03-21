@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>relance.ai — Interface Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563eb; --blue-dark: #1d4ed8; --blue-light: #eff6ff; --blue-mid: #bfdbfe;
+      --success: #16a34a; --success-light: #dcfce7;
+      --warning: #f59e0b; --warning-light: #fef9c3;
+      --danger: #dc2626; --danger-light: #fee2e2;
+      --orange: #ea580c; --orange-light: #fff7ed;
+      --purple: #7c3aed; --purple-light: #f5f3ff;
+      --bg: #f1f5f9; --white: #ffffff;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
+      --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563;
+      --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
+      --radius: 10px; --radius-sm: 7px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--gray-900); height:100vh; overflow:hidden; display:flex; flex-direction:column; font-size:13px; }
+
+    /* ═══════════════ TOP BAR ═══════════════ */
+    .topbar { background:var(--white); border-bottom:1px solid var(--gray-200); height:48px; display:flex; align-items:center; padding:0 14px; gap:12px; flex-shrink:0; z-index:100; }
+    .topbar-logo { display:flex; align-items:center; gap:7px; text-decoration:none; margin-right:6px; }
+    .logo-icon { width:26px; height:26px; background:var(--blue); border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .logo-icon svg { width:14px; height:14px; fill:white; }
+    .logo-text { font-size:15px; font-weight:800; color:var(--gray-900); letter-spacing:-.4px; }
+    .logo-text span { color:var(--blue); }
+    .topbar-sep { width:1px; height:22px; background:var(--gray-200); }
+    .topbar-badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; }
+    .badge-welcome { background:#dbeafe; color:#1d4ed8; }
+    .badge-antichurn { background:var(--danger-light); color:var(--danger); }
+    .badge-upgrade { background:#f0fdf4; color:var(--success); }
+    .badge-reactiv { background:var(--orange-light); color:var(--orange); }
+    .topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+    .agent-info { display:flex; align-items:center; gap:7px; }
+    .agent-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700; }
+    .agent-name { font-size:12px; font-weight:600; color:var(--gray-700); }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:var(--success); }
+    .btn-sm { font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; border:none; cursor:pointer; }
+    .btn-primary { background:var(--blue); color:white; }
+    .btn-primary:hover { background:var(--blue-dark); }
+    .btn-ghost { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
+    .btn-ghost:hover { background:var(--gray-200); }
+    .btn-danger { background:var(--danger-light); color:var(--danger); border:1px solid #fca5a5; }
+    .btn-danger:hover { background:#fecaca; }
+
+    /* ═══════════════ COMPLIANCE BANNER ═══════════════ */
+    .compliance-banner { background:white; border-bottom:2px solid #bbf7d0; padding:0; flex-shrink:0; }
+    .compliance-header { display:flex; align-items:center; gap:10px; padding:6px 14px; cursor:pointer; }
+    .compliance-header:hover { background:var(--gray-50); }
+    .compliance-items { display:flex; gap:20px; align-items:center; flex:1; }
+    .compliance-item { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:500; color:var(--gray-700); }
+    .compliance-item .icon { font-size:12px; }
+    .compliance-chevron { font-size:11px; color:var(--gray-400); margin-left:auto; transition:transform .2s; }
+    .compliance-chevron.open { transform:rotate(180deg); }
+    .compliance-detail { display:none; padding:8px 14px 10px; background:var(--gray-50); border-top:1px solid var(--gray-100); }
+    .compliance-detail.open { display:flex; gap:24px; }
+    .compliance-detail-item { font-size:11px; color:var(--gray-600); }
+    .compliance-detail-item strong { color:var(--gray-900); }
+
+    /* ═══════════════ MAIN LAYOUT ═══════════════ */
+    .main { display:grid; grid-template-columns:280px 1fr 280px; gap:0; flex:1; overflow:hidden; }
+
+    /* ═══════════════ LEFT PANEL — QUEUE ═══════════════ */
+    .left-panel { background:var(--white); border-right:1px solid var(--gray-200); display:flex; flex-direction:column; overflow:hidden; }
+    .panel-header { padding:10px 12px 0; flex-shrink:0; }
+    .panel-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-500); margin-bottom:8px; }
+    .queue-tabs { display:flex; gap:2px; border-bottom:1px solid var(--gray-200); padding-bottom:0; }
+    .queue-tab { flex:1; text-align:center; padding:6px 4px; font-size:10px; font-weight:600; color:var(--gray-500); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-radius:4px 4px 0 0; }
+    .queue-tab:hover { background:var(--gray-50); color:var(--gray-700); }
+    .queue-tab.active { color:var(--blue); border-bottom-color:var(--blue); background:var(--blue-light); }
+    .queue-tab .tab-count { display:inline-block; background:var(--gray-200); color:var(--gray-600); border-radius:20px; padding:0 5px; font-size:9px; margin-left:2px; }
+    .queue-tab.active .tab-count { background:var(--blue-mid); color:var(--blue-dark); }
+    .queue-list { overflow-y:auto; flex:1; padding:8px; }
+    .queue-item { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-sm); padding:9px 10px; margin-bottom:6px; cursor:pointer; transition:all .15s; }
+    .queue-item:hover { border-color:var(--blue-mid); background:var(--blue-light); }
+    .queue-item.active { border-color:var(--blue); background:var(--blue-light); box-shadow:0 0 0 2px rgba(37,99,235,.1); }
+    .qi-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+    .qi-name { font-size:12px; font-weight:600; color:var(--gray-900); }
+    .qi-badge { font-size:9px; font-weight:700; padding:2px 6px; border-radius:10px; }
+    .qi-time { font-size:10px; color:var(--gray-400); }
+    .qi-sub { font-size:11px; color:var(--gray-600); display:flex; align-items:center; gap:6px; }
+    .qi-amount { font-weight:600; color:var(--gray-900); }
+    .qi-priority { display:flex; align-items:center; gap:3px; }
+    .priority-dot { width:6px; height:6px; border-radius:50%; }
+    .priority-high { background:var(--danger); }
+    .priority-med { background:var(--warning); }
+    .priority-low { background:var(--success); }
+
+    /* ═══════════════ CENTER PANEL ═══════════════ */
+    .center-panel { display:flex; flex-direction:column; overflow:hidden; background:var(--bg); }
+
+    /* Timing banner */
+    .timing-banner { display:flex; align-items:center; gap:8px; padding:6px 14px; background:white; border-bottom:1px solid var(--gray-200); flex-shrink:0; }
+    .timing-status { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; }
+    .timing-sep { width:1px; height:14px; background:var(--gray-200); }
+    .timing-info { font-size:10px; color:var(--gray-500); }
+    .call-timer-wrap { margin-left:auto; display:flex; align-items:center; gap:10px; }
+    .call-timer { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--gray-900); background:var(--gray-100); padding:3px 10px; border-radius:6px; }
+    .call-timer.active { background:var(--success-light); color:var(--success); }
+    .duration-bar-wrap { width:120px; }
+    .duration-bar-label { font-size:9px; color:var(--gray-500); margin-bottom:2px; display:flex; justify-content:space-between; }
+    .duration-bar { height:5px; border-radius:10px; background:var(--gray-200); overflow:visible; position:relative; display:flex; gap:2px; }
+    .duration-seg { height:5px; border-radius:10px; flex:1; }
+    .dur-gray { background:var(--gray-300); }
+    .dur-green { background:var(--success); }
+    .dur-yellow { background:var(--warning); }
+    .dur-red { background:var(--danger); }
+    .duration-cursor { width:8px; height:8px; border-radius:50%; background:var(--blue); position:absolute; top:-1.5px; transform:translateX(-50%); border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:left .5s; }
+
+    /* Center scroll */
+    .center-scroll { overflow-y:auto; flex:1; padding:12px 14px; }
+
+    /* Donor card */
+    .donor-card { background:white; border:1px solid var(--gray-200); border-radius:var(--radius); padding:14px; margin-bottom:12px; box-shadow:var(--shadow); }
+    .donor-card-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+    .donor-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#8b5cf6); display:flex; align-items:center; justify-content:center; color:white; font-size:16px; font-weight:700; flex-shrink:0; }
+    .donor-meta { flex:1; }
+    .donor-name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+    .donor-name { font-size:16px; font-weight:700; color:var(--gray-900); }
+    .donor-channel { font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:#fef3c7; color:#92400e; }
+    .donor-channel.web { background:#dbeafe; color:#1e40af; }
+    .donor-channel.courrier { background:#f3e8ff; color:#6b21a8; }
+    .donor-call-type { font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; }
+    .donor-info-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:12px; }
+    .donor-stat { background:var(--gray-50); border:1px solid var(--gray-100); border-radius:var(--radius-sm); padding:8px 10px; }
+    .donor-stat-label { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.3px; color:var(--gray-400); margin-bottom:2px; }
+    .donor-stat-value { font-size:14px; font-weight:700; color:var(--gray-900); }
+    .donor-stat-sub { font-size:10px; color:var(--gray-500); }
+    .payment-sparkline { display:flex; align-items:center; gap:4px; margin-top:4px; }
+    .spark-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .spark-ok { background:var(--success); }
+    .spark-fail { background:var(--danger); }
+    .spark-label { font-size:9px; color:var(--gray-400); margin-left:2px; }
+
+    /* AI Brief */
+    .ai-brief { background:linear-gradient(135deg,#eff6ff,#f0fdf4); border:1px solid #bfdbfe; border-radius:var(--radius-sm); overflow:hidden; margin-bottom:12px; }
+    .ai-brief-header { display:flex; align-items:center; gap:8px; padding:9px 12px; cursor:pointer; }
+    .ai-brief-header:hover { background:rgba(37,99,235,.04); }
+    .ai-brief-icon { width:20px; height:20px; background:var(--blue); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+    .ai-brief-title { font-size:11px; font-weight:700; color:var(--blue-dark); flex:1; }
+    .ai-brief-chevron { font-size:10px; color:var(--blue); transition:transform .2s; }
+    .ai-brief-chevron.open { transform:rotate(180deg); }
+    .ai-brief-body { display:none; padding:0 12px 12px; }
+    .ai-brief-body.open { display:block; }
+    .ai-brief-text { font-size:12px; line-height:1.6; color:var(--gray-700); font-style:italic; }
+    .ai-brief-rec { margin-top:8px; display:flex; gap:6px; align-items:flex-start; }
+    .ai-brief-rec-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); margin-top:4px; flex-shrink:0; }
+    .ai-brief-rec-text { font-size:11px; color:var(--gray-600); }
+
+    /* Upgrade psychology */
+    .upgrade-box { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:12px; }
+    .upgrade-box-title { font-size:11px; font-weight:700; color:var(--success); margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+    .upgrade-amounts { display:flex; gap:10px; align-items:center; }
+    .upgrade-current { font-size:12px; color:var(--gray-600); }
+    .upgrade-arrow { color:var(--gray-400); font-size:12px; }
+    .upgrade-options { display:flex; gap:8px; }
+    .upgrade-opt { padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all .15s; }
+    .upgrade-opt-main { background:var(--success); color:white; }
+    .upgrade-opt-main:hover { background:#15803d; }
+    .upgrade-opt-anchor { background:var(--success-light); color:var(--success); border:1px solid #bbf7d0; }
+    .upgrade-opt-anchor:hover { background:#d1fae5; }
+    .upgrade-rule { font-size:10px; color:var(--gray-500); margin-top:6px; }
+
+    /* Script phases */
+    .script-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-500); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+    .script-section-title::after { content:''; flex:1; height:1px; background:var(--gray-200); }
+    .phase-card { background:white; border:1px solid var(--gray-200); border-radius:var(--radius-sm); margin-bottom:6px; overflow:hidden; box-shadow:var(--shadow); }
+    .phase-header { display:flex; align-items:center; gap:8px; padding:10px 12px; cursor:pointer; }
+    .phase-header:hover { background:var(--gray-50); }
+    .phase-num { width:22px; height:22px; border-radius:50%; background:var(--blue); color:white; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .phase-label { font-size:12px; font-weight:600; color:var(--gray-900); flex:1; }
+    .phase-timing { font-size:10px; color:var(--gray-400); background:var(--gray-100); padding:2px 7px; border-radius:10px; }
+    .phase-chevron { font-size:11px; color:var(--gray-400); transition:transform .2s; }
+    .phase-chevron.open { transform:rotate(180deg); }
+    .phase-body { display:none; padding:0 12px 12px; border-top:1px solid var(--gray-100); }
+    .phase-body.open { display:block; }
+    .phase-script { font-size:12px; line-height:1.7; color:var(--gray-700); margin-bottom:8px; background:var(--gray-50); padding:10px 12px; border-radius:var(--radius-sm); border-left:3px solid var(--blue); }
+    .phase-script .highlight { color:var(--blue); font-weight:600; }
+    .phase-tip { font-size:11px; color:var(--gray-500); margin-bottom:8px; font-style:italic; }
+    .phase-actions { display:flex; gap:6px; align-items:center; }
+    .btn-mark { font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; border:none; cursor:pointer; background:var(--blue); color:white; transition:all .15s; }
+    .btn-mark:hover { background:var(--blue-dark); }
+    .btn-mark.used { background:var(--success-light); color:var(--success); cursor:default; }
+    .phase-card.completed { border-color:#bbf7d0; }
+    .phase-card.completed .phase-num { background:var(--success); }
+    .phase-card.active { border-color:var(--blue); }
+
+    /* Objections */
+    .obj-card { background:white; border:1px solid var(--gray-200); border-radius:var(--radius-sm); margin-bottom:6px; overflow:hidden; }
+    .obj-header { display:flex; align-items:center; gap:8px; padding:9px 12px; cursor:pointer; }
+    .obj-header:hover { background:#fff7ed; }
+    .obj-icon { font-size:14px; flex-shrink:0; }
+    .obj-label { font-size:11px; font-weight:600; color:var(--gray-800); flex:1; font-style:italic; }
+    .obj-chevron { font-size:11px; color:var(--gray-400); transition:transform .2s; }
+    .obj-chevron.open { transform:rotate(180deg); }
+    .obj-body { display:none; padding:0 12px 12px; border-top:1px solid var(--gray-100); background:var(--gray-50); }
+    .obj-body.open { display:block; }
+    .obj-explain { font-size:11px; color:var(--gray-500); margin-top:8px; margin-bottom:6px; font-style:italic; }
+    .obj-response { font-size:12px; line-height:1.7; color:var(--gray-700); background:white; padding:10px 12px; border-radius:var(--radius-sm); border-left:3px solid var(--orange); }
+    .obj-response .highlight { color:var(--orange); font-weight:600; }
+    .obj-magic { display:flex; align-items:center; gap:6px; margin-top:8px; padding:7px 10px; background:#fff7ed; border-radius:var(--radius-sm); border:1px solid #fed7aa; }
+    .obj-magic-icon { font-size:12px; }
+    .obj-magic-text { font-size:11px; font-weight:600; color:var(--orange); }
+
+    /* ═══════════════ RIGHT PANEL ═══════════════ */
+    .right-panel { background:var(--white); border-left:1px solid var(--gray-200); display:flex; flex-direction:column; overflow:hidden; }
+    .rp-section { border-bottom:1px solid var(--gray-100); padding:10px 12px; }
+    .rp-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-400); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+    .rp-title a { font-size:10px; font-weight:600; color:var(--blue); text-transform:none; letter-spacing:0; cursor:pointer; }
+
+    /* Call actions */
+    .call-btn { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:var(--radius-sm); border:none; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600; width:100%; transition:all .15s; margin-bottom:6px; }
+    .call-btn:last-child { margin-bottom:0; }
+    .call-btn-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .call-btn-text { text-align:left; flex:1; }
+    .call-btn-sub { font-size:10px; font-weight:400; opacity:.7; display:block; }
+    .btn-call-start { background:var(--success); color:white; }
+    .btn-call-start:hover { background:#15803d; }
+    .btn-call-start .call-btn-icon { background:rgba(255,255,255,.2); }
+    .btn-call-end { background:var(--danger-light); color:var(--danger); border:1px solid #fca5a5; }
+    .btn-call-end:hover { background:#fecaca; }
+    .btn-call-skip { background:var(--gray-100); color:var(--gray-600); border:1px solid var(--gray-200); }
+    .btn-call-skip:hover { background:var(--gray-200); }
+
+    /* Outcome */
+    .outcome-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .outcome-btn { padding:8px 6px; border-radius:var(--radius-sm); border:1px solid var(--gray-200); background:var(--gray-50); cursor:pointer; font-family:inherit; font-size:11px; font-weight:600; color:var(--gray-700); text-align:center; transition:all .15s; }
+    .outcome-btn:hover { background:var(--blue-light); border-color:var(--blue-mid); color:var(--blue); }
+    .outcome-btn.selected { background:var(--blue-light); border-color:var(--blue); color:var(--blue); }
+
+    /* Timeline */
+    .timeline { overflow-y:auto; flex:1; }
+    .timeline-item { display:flex; gap:10px; padding:6px 12px; }
+    .timeline-dot-wrap { display:flex; flex-direction:column; align-items:center; }
+    .timeline-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+    .timeline-line { width:1px; background:var(--gray-200); flex:1; margin:3px 0; }
+    .timeline-content { flex:1; padding-bottom:6px; }
+    .timeline-date { font-size:10px; color:var(--gray-400); margin-bottom:1px; }
+    .timeline-event { font-size:11px; font-weight:500; color:var(--gray-800); }
+    .timeline-note { font-size:10px; color:var(--gray-500); margin-top:1px; }
+
+    /* Leaderboard */
+    .leaderboard-item { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--gray-100); }
+    .leaderboard-item:last-child { border-bottom:none; }
+    .lb-rank { font-size:11px; font-weight:700; color:var(--gray-400); width:14px; text-align:center; }
+    .lb-avatar { width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700; }
+    .lb-name { font-size:11px; font-weight:600; color:var(--gray-800); flex:1; }
+    .lb-stats { display:flex; gap:8px; }
+    .lb-stat { text-align:right; }
+    .lb-stat-val { font-size:11px; font-weight:700; color:var(--gray-900); display:block; }
+    .lb-stat-lbl { font-size:9px; color:var(--gray-400); }
+    .lb-badge-save { font-size:9px; font-weight:700; color:var(--success); background:var(--success-light); padding:1px 5px; border-radius:8px; }
+
+    /* Note */
+    .note-input { width:100%; border:1px solid var(--gray-200); border-radius:var(--radius-sm); padding:8px; font-family:inherit; font-size:11px; color:var(--gray-800); resize:none; outline:none; background:var(--gray-50); }
+    .note-input:focus { border-color:var(--blue-mid); background:white; box-shadow:0 0 0 3px rgba(37,99,235,.06); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:4px; height:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:var(--gray-300); border-radius:4px; }
+
+    /* Utils */
+    .flex { display:flex; align-items:center; }
+    .gap-6 { gap:6px; }
+    .mt-6 { margin-top:6px; }
+    .tag { font-size:9px; font-weight:700; padding:2px 6px; border-radius:8px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ TOP BAR ═══════════════════════════════════════ -->
+<div class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <span class="logo-text">relance<span>.ai</span></span>
+  </a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-badge badge-antichurn">🔴 Anti-churn actif</span>
+  <a href="scripts.html" class="btn-sm btn-ghost">📋 Scripts</a>
+  <a href="stats.html" class="btn-sm btn-ghost">📊 Stats</a>
+  <div class="topbar-right">
+    <button class="btn-sm" onclick="activateDemoMode()" style="background:#f59e0b;color:white;border:none;cursor:pointer;" id="demo-btn">🎭 Mode démo</button>
+    <div class="status-dot"></div>
+    <div class="agent-info">
+      <div class="agent-avatar">SC</div>
+      <span class="agent-name">Sophie C.</span>
+    </div>
+    <button class="btn-sm btn-ghost">⚙️</button>
+  </div>
+</div>
+
+<!-- ═══════════════ DEMO BANNER ═══════════════ -->
+<div id="demo-banner" style="display:none;background:linear-gradient(90deg,#f59e0b,#d97706);color:white;padding:8px 14px;font-size:12px;font-weight:700;text-align:center;letter-spacing:.05em;">
+  📌 MODE DÉMONSTRATION ACTIVÉ — Données fictives à des fins de démonstration uniquement
+  <button onclick="deactivateDemoMode()" style="margin-left:16px;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.5);color:white;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">✕ Quitter</button>
+</div>
+
+<!-- ═══════════════════════════════════════ COMPLIANCE BANNER ═══════════════════════════════════════ -->
+<div class="compliance-banner">
+  <div class="compliance-header" onclick="toggleCompliance()">
+    <div class="compliance-items">
+      <span class="compliance-item"><span class="icon">✅</span> Base légale — Intérêt légitime</span>
+      <div style="width:1px;height:14px;background:var(--gray-200)"></div>
+      <span class="compliance-item"><span class="icon">✅</span> Horaire conforme</span>
+      <div style="width:1px;height:14px;background:var(--gray-200)"></div>
+      <span class="compliance-item"><span class="icon">✅</span> Bloctel non applicable (donateurs propres)</span>
+      <div style="width:1px;height:14px;background:var(--gray-200)"></div>
+      <span class="compliance-item"><span class="icon">📋</span> Campagne: Médecins Sans Frontières — Retention Q1 2026</span>
+    </div>
+    <span class="compliance-chevron" id="comp-chevron">▼</span>
+  </div>
+  <div class="compliance-detail" id="compliance-detail">
+    <div class="compliance-detail-item"><strong>Base légale :</strong> Art. 6.1.f RGPD — Intérêt légitime (donateurs actifs < 3 ans)</div>
+    <div class="compliance-detail-item"><strong>Enregistrement :</strong> Consentement obtenu en début d'appel requis</div>
+    <div class="compliance-detail-item"><strong>Opposition :</strong> Enregistrer immédiatement si demandée</div>
+    <div class="compliance-detail-item"><strong>Bloctel :</strong> Non applicable — base "donateurs propres" MSF</div>
+    <div class="compliance-detail-item"><strong>DPO contact :</strong> dpo@msf.fr</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ MAIN ═══════════════════════════════════════ -->
+<div class="main">
+
+  <!-- ══════════ LEFT — QUEUE ══════════ -->
+  <div class="left-panel">
+    <div class="panel-header">
+      <div class="panel-title">File d'attente</div>
+      <div class="queue-tabs">
+        <div class="queue-tab" onclick="setTab('welcome')" id="tab-welcome">👋<br>Welcome <span class="tab-count">8</span></div>
+        <div class="queue-tab active" onclick="setTab('antichurn')" id="tab-antichurn">🔴<br>Anti-churn <span class="tab-count">12</span></div>
+        <div class="queue-tab" onclick="setTab('upgrade')" id="tab-upgrade">⬆️<br>Upgrade <span class="tab-count">6</span></div>
+        <div class="queue-tab" onclick="setTab('reactiv')" id="tab-reactiv">🔄<br>Réactiv. <span class="tab-count">4</span></div>
+      </div>
+    </div>
+    <div class="queue-list" id="queue-list">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ══════════ CENTER ══════════ -->
+  <div class="center-panel">
+
+    <!-- Timing + Duration bar -->
+    <div class="timing-banner">
+      <div class="timing-status" id="timing-status">🟢 Créneau optimal</div>
+      <div class="timing-sep"></div>
+      <div class="timing-info" id="timing-info">Mardi · 10h23 · Fenêtre 9h30–11h30</div>
+      <div class="call-timer-wrap">
+        <div class="duration-bar-wrap">
+          <div class="duration-bar-label"><span>Durée optimale anti-churn</span><span id="dur-current">0:00</span></div>
+          <div class="duration-bar">
+            <div class="duration-seg dur-gray" style="flex:2" title="< 4 min"></div>
+            <div class="duration-seg dur-green" style="flex:2" title="6-10 min optimale"></div>
+            <div class="duration-seg dur-yellow" style="flex:2.5" title="10-15 min"></div>
+            <div class="duration-seg dur-red" style="flex:1" title="> 15 min"></div>
+            <div class="duration-cursor" id="dur-cursor" style="left:0%"></div>
+          </div>
+        </div>
+        <div class="call-timer" id="call-timer" onclick="toggleTimer()">00:00</div>
+      </div>
+    </div>
+
+    <div class="center-scroll">
+
+      <!-- DONOR CARD -->
+      <div class="donor-card">
+        <div class="donor-card-header">
+          <div class="donor-avatar">ML</div>
+          <div class="donor-meta">
+            <div class="donor-name-row">
+              <span class="donor-name">Marie Lecomte</span>
+              <span class="donor-channel">F2F</span>
+              <span class="donor-call-type badge-antichurn">🔴 Anti-churn</span>
+            </div>
+            <div style="font-size:11px;color:var(--gray-500);">06 12 34 56 78 · Paris 15e · 67 ans</div>
+          </div>
+        </div>
+        <div class="donor-info-grid">
+          <div class="donor-stat">
+            <div class="donor-stat-label">Don mensuel</div>
+            <div class="donor-stat-value">12 €</div>
+            <div class="donor-stat-sub">depuis 22 mois</div>
+          </div>
+          <div class="donor-stat">
+            <div class="donor-stat-label">Ancienneté</div>
+            <div class="donor-stat-value">22 mois</div>
+            <div class="donor-stat-sub">Depuis janv. 2024</div>
+          </div>
+          <div class="donor-stat">
+            <div class="donor-stat-label">Signal</div>
+            <div class="donor-stat-value" style="color:var(--danger);font-size:11px;">Prél. refusé</div>
+            <div class="donor-stat-sub">il y a 3 jours</div>
+          </div>
+          <div class="donor-stat">
+            <div class="donor-stat-label">Paiements (6 mois)</div>
+            <div class="payment-sparkline">
+              <div class="spark-dot spark-ok" title="Sept OK"></div>
+              <div class="spark-dot spark-ok" title="Oct OK"></div>
+              <div class="spark-dot spark-ok" title="Nov OK"></div>
+              <div class="spark-dot spark-ok" title="Déc OK"></div>
+              <div class="spark-dot spark-ok" title="Jan OK"></div>
+              <div class="spark-dot spark-fail" title="Fév refusé"></div>
+            </div>
+            <div class="donor-stat-sub">5/6 ✓</div>
+          </div>
+        </div>
+
+        <!-- AI BRIEF -->
+        <div class="ai-brief">
+          <div class="ai-brief-header" onclick="toggleBrief()">
+            <div class="ai-brief-icon">🤖</div>
+            <div class="ai-brief-title">Brief IA pré-appel</div>
+            <div class="ai-brief-chevron open" id="brief-chevron">▲</div>
+          </div>
+          <div class="ai-brief-body open" id="ai-brief-body">
+            <div class="ai-brief-text">"Marie est très attachée aux projets terrain. Dernier email ouvert : Madagascar (taux d'ouverture 94%). Signal : prélèvement refusé il y a 3 jours. Historique : 22 mois sans incident avant ce refus."</div>
+            <div class="ai-brief-rec" style="margin-top:10px;">
+              <div class="ai-brief-rec-dot"></div>
+              <div class="ai-brief-rec-text"><strong>Recommandation :</strong> Ne pas mentionner le prélèvement refusé avant 2 minutes. Ouvrir sur Madagascar. Proposer une pause de 2 mois si résistance — ne pas aller directement à l'annulation.</div>
+            </div>
+            <div class="ai-brief-rec">
+              <div class="ai-brief-rec-dot"></div>
+              <div class="ai-brief-rec-text"><strong>Ton :</strong> Chaleureux et reconnaissant. Marie a un historique irréprochable — la fidéliser est prioritaire sur tout.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCRIPT TITLE -->
+      <div class="script-section-title">📋 Script — Anti-churn · 6 phases</div>
+
+      <!-- PHASE 1 — ACCROCHE -->
+      <div class="phase-card" id="phase-1">
+        <div class="phase-header" onclick="togglePhase(1)">
+          <div class="phase-num">1</div>
+          <div class="phase-label">Accroche</div>
+          <div class="phase-timing">0–30 sec</div>
+          <div class="phase-chevron open" id="ph-chev-1">▲</div>
+        </div>
+        <div class="phase-body open" id="ph-body-1">
+          <div class="phase-script">
+            "Bonjour, je suis <span class="highlight">Sophie</span> et j'appelle de la part de <span class="highlight">Médecins Sans Frontières</span>. <span class="highlight">Est-ce que je tombe bien ?</span>"
+          </div>
+          <div class="phase-tip">💡 Poser une question fermée simple. L'objectif : obtenir un premier "oui". Éviter absolument "je vous appelle au sujet de votre don" — ça met le donateur en défense immédiatement.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(1, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 2 — LÉGITIMITÉ -->
+      <div class="phase-card" id="phase-2">
+        <div class="phase-header" onclick="togglePhase(2)">
+          <div class="phase-num">2</div>
+          <div class="phase-label">Légitimité</div>
+          <div class="phase-timing">30s–1 min</div>
+          <div class="phase-chevron" id="ph-chev-2">▼</div>
+        </div>
+        <div class="phase-body" id="ph-body-2">
+          <div class="phase-script">
+            "Je voulais d'abord vous remercier personnellement — vous soutenez MSF depuis <span class="highlight">22 mois</span>, et votre aide fait une vraie différence. Cette année, grâce à des donateurs comme vous, on a pu soigner <span class="highlight">plus de 40 000 personnes</span> en zone de crise."
+          </div>
+          <div class="phase-tip">💡 Être spécifique : "22 mois" plutôt que "longtemps". Citer des chiffres réels d'impact — même approximatifs, ils ancrent l'émotion.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(2, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 3 — ÉCOUTE ACTIVE -->
+      <div class="phase-card" id="phase-3">
+        <div class="phase-header" onclick="togglePhase(3)">
+          <div class="phase-num">3</div>
+          <div class="phase-label">Écoute active</div>
+          <div class="phase-timing">variable</div>
+          <div class="phase-chevron" id="ph-chev-3">▼</div>
+        </div>
+        <div class="phase-body" id="ph-body-3">
+          <div class="phase-script">
+            "<span class="highlight">Comment vous sentez-vous par rapport à votre engagement envers MSF ?</span> Vous êtes avec nous depuis presque deux ans — qu'est-ce qui vous avait motivé à nous rejoindre ?"
+          </div>
+          <div class="phase-tip">💡 Phase souvent sautée — c'est une erreur. Laisser parler le donateur de la cause avant tout. Écouter 30 à 40% du temps d'appel. Révèle le niveau d'attachement et les points de friction.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(3, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 4 — TRANSITION -->
+      <div class="phase-card" id="phase-4">
+        <div class="phase-header" onclick="togglePhase(4)">
+          <div class="phase-num">4</div>
+          <div class="phase-label">Transition vers l'objet</div>
+          <div class="phase-timing">1–2 min</div>
+          <div class="phase-chevron" id="ph-chev-4">▼</div>
+        </div>
+        <div class="phase-body" id="ph-body-4">
+          <div class="phase-script">
+            "La raison de mon appel aujourd'hui, c'est qu'on a remarqué que <span class="highlight">votre prélèvement de ce mois n'a pas pu aboutir</span>. Je voulais m'assurer que tout va bien de votre côté et qu'on peut maintenir votre soutien aux équipes sur le terrain."
+          </div>
+          <div class="phase-tip">💡 Ne jamais dire "on a un problème de paiement". Dire "on a remarqué que..." — formuler comme une attention portée au donateur, pas une réclamation.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(4, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 5 — PROPOSITION -->
+      <div class="phase-card" id="phase-5">
+        <div class="phase-header" onclick="togglePhase(5)">
+          <div class="phase-num">5</div>
+          <div class="phase-label">Proposition</div>
+          <div class="phase-timing">30–60 sec</div>
+          <div class="phase-chevron" id="ph-chev-5">▼</div>
+        </div>
+        <div class="phase-body" id="ph-body-5">
+          <div class="phase-script">
+            "Est-ce que <span class="highlight">vous souhaitez qu'on régularise ça ensemble maintenant</span> pour maintenir votre soutien ? Ou si le mois a été compliqué financièrement, <span class="highlight">on peut aussi mettre votre don en pause 2 mois</span> sans perdre votre historique — vous n'avez qu'à me le confirmer."
+          </div>
+          <div class="phase-tip">💡 Toujours proposer deux options. Option principale : régulariser. Option filet : pause 2 mois. La pause est une victoire — le don reprendra après.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(5, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 6 — CLÔTURE -->
+      <div class="phase-card" id="phase-6">
+        <div class="phase-header" onclick="togglePhase(6)">
+          <div class="phase-num">6</div>
+          <div class="phase-label">Clôture</div>
+          <div class="phase-timing">~1 min</div>
+          <div class="phase-chevron" id="ph-chev-6">▼</div>
+        </div>
+        <div class="phase-body" id="ph-body-6">
+          <div class="phase-script">
+            "<span class="highlight">Merci infiniment pour votre fidélité</span>, Marie. Votre soutien depuis presque deux ans fait vraiment partie de ce qui permet à MSF d'être présent partout où il le faut. On est ravis que vous restiez avec nous. <span class="highlight">Bonne journée à vous !</span>"
+          </div>
+          <div class="phase-tip">💡 Toujours terminer sur une note positive, que la réponse soit oui ou non. Confirmer les informations si changement. Mentionner le prochain contact prévu si pertinent.</div>
+          <div class="phase-actions">
+            <button class="btn-mark" onclick="markPhase(6, this)">Marquer utilisé ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBJECTIONS -->
+      <div class="script-section-title" style="margin-top:14px;">🛡️ Objections fréquentes</div>
+
+      <!-- OBJ 1 -->
+      <div class="obj-card">
+        <div class="obj-header" onclick="toggleObj(1)">
+          <div class="obj-icon">💸</div>
+          <div class="obj-label">"Je n'ai pas les moyens en ce moment"</div>
+          <div class="obj-chevron" id="obj-chev-1">▼</div>
+        </div>
+        <div class="obj-body" id="obj-body-1">
+          <div class="obj-explain">70% du temps : ce n'est pas une vraie contrainte financière — c'est une esquive douce ou un manque de confiance dans la valeur.</div>
+          <div class="obj-response">
+            "Je comprends tout à fait. C'est pour ça que je ne vous propose rien de grand — juste <span class="highlight">maintenir votre soutien actuel</span>. Mais si même ça c'est compliqué ce mois-ci, <span class="highlight">on peut mettre votre don en pause 2 mois sans perdre votre historique</span>."
+          </div>
+          <div class="obj-magic"><span class="obj-magic-icon">✨</span><span class="obj-magic-text">Phrase magique : "On peut mettre en pause 2 mois — vous restez dans notre famille."</span></div>
+        </div>
+      </div>
+
+      <!-- OBJ 2 -->
+      <div class="obj-card">
+        <div class="obj-header" onclick="toggleObj(2)">
+          <div class="obj-icon">🤔</div>
+          <div class="obj-label">"Je ne me souviens plus pourquoi j'avais signé"</div>
+          <div class="obj-chevron" id="obj-chev-2">▼</div>
+        </div>
+        <div class="obj-body" id="obj-body-2">
+          <div class="obj-explain">Le lien émotionnel s'est effrité. Ce donateur n'a pas été nourri par l'association depuis son engagement.</div>
+          <div class="obj-response">
+            "C'est normal — ça fait <span class="highlight">22 mois</span> et vous n'avez peut-être pas reçu toutes nos nouvelles. Permettez-moi de vous raconter ce qu'on a accompli cette année grâce à des gens comme vous... [raconter impact Madagascar]. <span class="highlight">Est-ce que ça vous parle encore ?</span>"
+          </div>
+        </div>
+      </div>
+
+      <!-- OBJ 3 -->
+      <div class="obj-card">
+        <div class="obj-header" onclick="toggleObj(3)">
+          <div class="obj-icon">❌</div>
+          <div class="obj-label">"J'ai annulé / je veux annuler"</div>
+          <div class="obj-chevron" id="obj-chev-3">▼</div>
+        </div>
+        <div class="obj-body" id="obj-body-3">
+          <div class="obj-explain">Appel le plus difficile. La personne a pris une décision. Ne pas forcer — écouter d'abord.</div>
+          <div class="obj-response">
+            "Je vous entends. <span class="highlight">Avant qu'on procède, est-ce que vous pouvez me dire ce qui s'est passé ? Je voudrais comprendre, pas vous convaincre.</span> [Écouter sans interrompre.] Si c'est une question de timing, on peut mettre en pause 2 mois. Si c'est autre chose, dites-moi."
+          </div>
+          <div class="obj-magic"><span class="obj-magic-icon">✨</span><span class="obj-magic-text">Phrase magique : "On peut mettre votre don en pause 2 mois sans rien perdre de votre historique — vous avez juste à me le confirmer."</span></div>
+        </div>
+      </div>
+
+      <!-- OBJ 4 -->
+      <div class="obj-card">
+        <div class="obj-header" onclick="toggleObj(4)">
+          <div class="obj-icon">📞</div>
+          <div class="obj-label">"Je reçois trop d'appels / courriers"</div>
+          <div class="obj-chevron" id="obj-chev-4">▼</div>
+        </div>
+        <div class="obj-body" id="obj-body-4">
+          <div class="obj-explain">Fatigue de sollicitation. Souvent légitime. Ne pas défendre la fréquence — s'adapter.</div>
+          <div class="obj-response">
+            "C'est un retour vraiment utile, merci. Je note immédiatement dans votre dossier que vous <span class="highlight">préférez moins de contacts</span>. <span class="highlight">Est-ce qu'une fois par an ça vous conviendrait ?</span> Votre fidélité reste précieuse pour nous."
+          </div>
+        </div>
+      </div>
+
+      <!-- OBJ 5 -->
+      <div class="obj-card">
+        <div class="obj-header" onclick="toggleObj(5)">
+          <div class="obj-icon">🏘️</div>
+          <div class="obj-label">"Je préfère donner localement"</div>
+          <div class="obj-chevron" id="obj-chev-5">▼</div>
+        </div>
+        <div class="obj-body" id="obj-body-5">
+          <div class="obj-explain">Réorientation des valeurs ou déception. Ancrer la cause dans le local quand possible.</div>
+          <div class="obj-response">
+            "C'est tout à fait compréhensible. Je voudrais juste vous partager un chiffre : <span class="highlight">MSF a opéré dans [région proche] lors de la crise de l'an dernier</span>. Même si on est une grande asso, on agit concrètement près de chez vous aussi. <span class="highlight">Est-ce que ça change quelque chose pour vous ?</span>"
+          </div>
+        </div>
+      </div>
+
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ RIGHT PANEL ══════════ -->
+  <div class="right-panel">
+
+    <!-- CALL ACTIONS -->
+    <div class="rp-section">
+      <div class="rp-title">Actions</div>
+      <button class="call-btn btn-call-start" onclick="startCall()">
+        <div class="call-btn-icon">📞</div>
+        <div class="call-btn-text">Démarrer l'appel<span class="call-btn-sub">Marie Lecomte · 06 12 34 56 78</span></div>
+      </button>
+      <button class="call-btn btn-call-skip">
+        <div class="call-btn-icon">⏭</div>
+        <div class="call-btn-text">Passer<span class="call-btn-sub">Rappeler dans 2h</span></div>
+      </button>
+    </div>
+
+    <!-- OUTCOME -->
+    <div class="rp-section">
+      <div class="rp-title">Résultat</div>
+      <div class="outcome-grid">
+        <button class="outcome-btn" onclick="selectOutcome(this)">✅ Don sauvé</button>
+        <button class="outcome-btn" onclick="selectOutcome(this)">⏸ Pause 2 mois</button>
+        <button class="outcome-btn" onclick="selectOutcome(this)">❌ Annulé</button>
+        <button class="outcome-btn" onclick="selectOutcome(this)">📵 Pas répondu</button>
+        <button class="outcome-btn" onclick="selectOutcome(this)">🔄 Rappel</button>
+        <button class="outcome-btn" onclick="selectOutcome(this)">⬆️ Upgrade</button>
+      </div>
+    </div>
+
+    <!-- NOTE -->
+    <div class="rp-section">
+      <div class="rp-title">Note rapide</div>
+      <textarea class="note-input" rows="3" placeholder="Notes sur l'appel, contexte, prochain contact..."></textarea>
+      <div style="margin-top:6px;display:flex;gap:6px;">
+        <button class="btn-sm btn-primary" style="flex:1;">Sauvegarder</button>
+        <button class="call-btn btn-call-end" style="margin:0;padding:5px 10px;font-size:11px;width:auto;">Clore</button>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="rp-section" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+      <div class="rp-title">
+        Historique <a onclick="toggleHistory()">Voir tout ↓</a>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--danger)"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-date">Il y a 3 jours</div>
+            <div class="timeline-event">🔴 Prélèvement refusé</div>
+            <div class="timeline-note">Fev 2026 · €12 · Solde insuffisant</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--blue)"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-date">12 fév 2026</div>
+            <div class="timeline-event">📧 Email ouvert — Madagascar</div>
+            <div class="timeline-note">Taux ouverture: 94% · Clic lien impact</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--success)"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-date">15 jan 2026</div>
+            <div class="timeline-event">✅ Prélèvement OK · €12</div>
+            <div class="timeline-note"></div>
+          </div>
+        </div>
+        <div class="timeline-item" id="history-extra" style="display:none;">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--success)"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-date">15 déc 2025</div>
+            <div class="timeline-event">✅ Prélèvement OK · €12</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:#6366f1"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-date">Janv. 2024</div>
+            <div class="timeline-event">🤝 Acquisition F2F</div>
+            <div class="timeline-note">Paris 15e · Agent: Lucas M.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="rp-section">
+      <div class="rp-title">Équipe aujourd'hui</div>
+      <div class="leaderboard-item">
+        <div class="lb-rank">1</div>
+        <div class="lb-avatar">LM</div>
+        <div class="lb-name">Lucas M.</div>
+        <div class="lb-stats">
+          <div class="lb-stat"><span class="lb-stat-val">18</span><span class="lb-stat-lbl">appels</span></div>
+          <div class="lb-stat"><span class="lb-stat-val">72%</span><span class="lb-stat-lbl">succès</span></div>
+          <div class="lb-stat"><span class="lb-stat-val lb-badge-save">€216</span><span class="lb-stat-lbl">sauvés</span></div>
+        </div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="lb-rank">2</div>
+        <div class="lb-avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">SC</div>
+        <div class="lb-name">Sophie C. <span style="font-size:9px;color:var(--blue)">(vous)</span></div>
+        <div class="lb-stats">
+          <div class="lb-stat"><span class="lb-stat-val">14</span><span class="lb-stat-lbl">appels</span></div>
+          <div class="lb-stat"><span class="lb-stat-val">64%</span><span class="lb-stat-lbl">succès</span></div>
+          <div class="lb-stat"><span class="lb-stat-val lb-badge-save">€168</span><span class="lb-stat-lbl">sauvés</span></div>
+        </div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="lb-rank">3</div>
+        <div class="lb-avatar" style="background:linear-gradient(135deg,#f59e0b,#ea580c)">AB</div>
+        <div class="lb-name">Amina B.</div>
+        <div class="lb-stats">
+          <div class="lb-stat"><span class="lb-stat-val">11</span><span class="lb-stat-lbl">appels</span></div>
+          <div class="lb-stat"><span class="lb-stat-val">55%</span><span class="lb-stat-lbl">succès</span></div>
+          <div class="lb-stat"><span class="lb-stat-val lb-badge-save">€132</span><span class="lb-stat-lbl">sauvés</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── QUEUE DATA ───────────────────────────────────────────────────────────────
+const queueData = {
+  antichurn: [
+    { name:'Marie Lecomte', amount:'12€/mois', signal:'Prél. refusé J-3', priority:'high', time:'Il y a 3j', badge:'antichurn', active:true },
+    { name:'Pierre Dubois', amount:'20€/mois', signal:'Signal annulation', priority:'high', time:'Hier', badge:'antichurn' },
+    { name:'Françoise Martin', amount:'8€/mois', signal:'Prél. refusé J-7', priority:'med', time:'Il y a 1j', badge:'antichurn' },
+    { name:'Jacques Leroy', amount:'15€/mois', signal:'Pas prélevé 2 mois', priority:'med', time:'Il y a 2j', badge:'antichurn' },
+    { name:'Nathalie Durand', amount:'5€/mois', signal:'Prél. refusé J-1', priority:'high', time:'Hier', badge:'antichurn' },
+  ],
+  welcome: [
+    { name:'Thomas Bernard', amount:'10€/mois', signal:'1er prélèvement J+4', priority:'low', time:'Aujourd\'hui', badge:'welcome' },
+    { name:'Claire Simon', amount:'12€/mois', signal:'1er prélèvement J+5', priority:'low', time:'Hier', badge:'welcome' },
+    { name:'Marc Fontaine', amount:'7€/mois', signal:'1er prélèvement J+3', priority:'low', time:'Aujourd\'hui', badge:'welcome' },
+  ],
+  upgrade: [
+    { name:'Sophie Moreau', amount:'10€/mois', signal:'14 mois d\'ancienneté', priority:'med', time:'Aujourd\'hui', badge:'upgrade' },
+    { name:'Jean-Paul Renard', amount:'8€/mois', signal:'18 mois d\'ancienneté', priority:'med', time:'Hier', badge:'upgrade' },
+    { name:'Isabelle Lefebvre', amount:'15€/mois', signal:'12 mois d\'ancienneté', priority:'low', time:'Avant-hier', badge:'upgrade' },
+  ],
+  reactiv: [
+    { name:'Daniel Petit', amount:'—', signal:'Annulé il y a 45 jours', priority:'high', time:'Priorité', badge:'reactiv' },
+    { name:'Martine Girard', amount:'—', signal:'Annulé il y a 90 jours', priority:'med', time:'Cette sem.', badge:'reactiv' },
+  ]
+};
+
+let currentTab = 'antichurn';
+
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.queue-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderQueue(tab);
+}
+
+function renderQueue(tab) {
+  const list = document.getElementById('queue-list');
+  list.innerHTML = '';
+  const items = queueData[tab] || [];
+  items.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'queue-item' + (item.active ? ' active' : '');
+    const priorityClass = item.priority === 'high' ? 'priority-high' : item.priority === 'med' ? 'priority-med' : 'priority-low';
+    el.innerHTML = `
+      <div class="qi-header">
+        <div class="qi-name">${item.name}</div>
+        <div class="qi-time">${item.time}</div>
+      </div>
+      <div class="qi-sub">
+        <span class="qi-amount">${item.amount}</span>
+        <span class="qi-priority"><span class="priority-dot ${priorityClass}"></span>${item.signal}</span>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+renderQueue('antichurn');
+
+// ─── TIMING INDICATOR ─────────────────────────────────────────────────────────
+function updateTiming() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 2=Tue, 4=Thu
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const t = h + m/60;
+  const banner = document.getElementById('timing-status');
+  const info = document.getElementById('timing-info');
+  const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const isOptimalDay = day === 2 || day === 4;
+  const isAcceptableDay = day === 1 || day === 3;
+  const isOptimalTime = (t >= 9.5 && t <= 11.5) || (t >= 16.5 && t <= 19);
+  const isAcceptableTime = (t >= 9 && t <= 11.5) || (t >= 14 && t <= 16.5) || (t >= 19 && t <= 20);
+  let timeStr = `${String(h).padStart(2,'0')}h${String(m).padStart(2,'0')}`;
+  info.textContent = `${days[day]} · ${timeStr} · Fenêtre optimale: Mar/Jeu 9h30–11h30 ou 16h30–19h`;
+  if (isOptimalDay && isOptimalTime) {
+    banner.textContent = '🟢 Créneau optimal';
+    banner.style.color = 'var(--success)';
+  } else if ((isOptimalDay || isAcceptableDay) && (isOptimalTime || isAcceptableTime)) {
+    banner.textContent = '🟡 Créneau acceptable';
+    banner.style.color = 'var(--warning)';
+  } else {
+    banner.textContent = '🔴 Hors créneau recommandé';
+    banner.style.color = 'var(--danger)';
+  }
+}
+updateTiming();
+
+// ─── CALL TIMER ───────────────────────────────────────────────────────────────
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('call-timer').classList.remove('active');
+  } else {
+    timerRunning = true;
+    document.getElementById('call-timer').classList.add('active');
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      updateTimerDisplay();
+    }, 1000);
+  }
+}
+
+function startCall() {
+  timerSeconds = 0;
+  timerRunning = true;
+  document.getElementById('call-timer').classList.add('active');
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('call-timer').textContent = str;
+  document.getElementById('dur-current').textContent = `${m}:${String(s).padStart(2,'0')}`;
+  // Anti-churn: <4 gray, 6-10 green, 10-15 yellow, >15 red — 15min = 900s
+  const pct = Math.min((timerSeconds / 900) * 100, 100);
+  document.getElementById('dur-cursor').style.left = pct + '%';
+}
+
+// ─── TOGGLES ──────────────────────────────────────────────────────────────────
+function toggleCompliance() {
+  const detail = document.getElementById('compliance-detail');
+  const chev = document.getElementById('comp-chevron');
+  detail.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function toggleBrief() {
+  const body = document.getElementById('ai-brief-body');
+  const chev = document.getElementById('brief-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function togglePhase(n) {
+  const body = document.getElementById('ph-body-' + n);
+  const chev = document.getElementById('ph-chev-' + n);
+  body.classList.toggle('open');
+  chev.textContent = body.classList.contains('open') ? '▲' : '▼';
+  chev.classList.toggle('open', body.classList.contains('open'));
+}
+
+function toggleObj(n) {
+  const body = document.getElementById('obj-body-' + n);
+  const chev = document.getElementById('obj-chev-' + n);
+  body.classList.toggle('open');
+  chev.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function markPhase(n, btn) {
+  btn.textContent = '✅ Utilisé';
+  btn.classList.add('used');
+  const card = document.getElementById('phase-' + n);
+  card.classList.add('completed');
+}
+
+function selectOutcome(btn) {
+  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function toggleHistory() {
+  const extra = document.getElementById('history-extra');
+  extra.style.display = extra.style.display === 'none' ? 'flex' : 'none';
+}
+
+// ─── MODE DÉMO ────────────────────────────────────────────────────────────────
+const DEMO_DONORS = {
+  antichurn: [
+    { name:'Martine Dupont', amount:'18€/mois', signal:'Prél. refusé J-2', priority:'high', time:'Aujourd\'hui', badge:'antichurn', active:true },
+    { name:'Robert Garnier', amount:'25€/mois', signal:'Signal annulation', priority:'high', time:'Hier', badge:'antichurn' },
+    { name:'Sylvie Mercier', amount:'10€/mois', signal:'Prél. refusé J-5', priority:'med', time:'Il y a 2j', badge:'antichurn' },
+    { name:'Alain Bouchard', amount:'15€/mois', signal:'Pas prélevé 3 mois', priority:'high', time:'Il y a 1j', badge:'antichurn' },
+    { name:'Christiane Roux', amount:'8€/mois', signal:'Prél. refusé J-1', priority:'high', time:'Aujourd\'hui', badge:'antichurn' },
+  ],
+  welcome: [
+    { name:'Émilie Leclerc', amount:'12€/mois', signal:'1er prélèvement J+3', priority:'low', time:'Aujourd\'hui', badge:'welcome' },
+    { name:'Nicolas Blanc', amount:'15€/mois', signal:'1er prélèvement J+5', priority:'low', time:'Hier', badge:'welcome' },
+  ],
+  upgrade: [
+    { name:'Isabelle Faure', amount:'10€/mois', signal:'16 mois d\'ancienneté', priority:'med', time:'Aujourd\'hui', badge:'upgrade' },
+    { name:'Laurent Morin', amount:'8€/mois', signal:'24 mois d\'ancienneté', priority:'med', time:'Hier', badge:'upgrade' },
+  ],
+  reactiv: [
+    { name:'Patricia Colin', amount:'—', signal:'Annulé il y a 60 jours', priority:'high', time:'Priorité', badge:'reactiv' },
+  ]
+};
+
+function activateDemoMode() {
+  // Show banner
+  document.getElementById('demo-banner').style.display = 'block';
+  document.getElementById('demo-btn').style.display = 'none';
+  // Inject demo data
+  Object.keys(DEMO_DONORS).forEach(tab => {
+    queueData[tab] = DEMO_DONORS[tab];
+  });
+  // Update tab counts
+  document.getElementById('tab-antichurn').innerHTML = '🔴<br>Anti-churn <span class="tab-count">' + DEMO_DONORS.antichurn.length + '</span>';
+  document.getElementById('tab-welcome').innerHTML = '👋<br>Welcome <span class="tab-count">' + DEMO_DONORS.welcome.length + '</span>';
+  document.getElementById('tab-upgrade').innerHTML = '⬆️<br>Upgrade <span class="tab-count">' + DEMO_DONORS.upgrade.length + '</span>';
+  document.getElementById('tab-reactiv').innerHTML = '🔄<br>Réactiv. <span class="tab-count">' + DEMO_DONORS.reactiv.length + '</span>';
+  // Switch to antichurn and render
+  setTab('antichurn');
+  // Re-attach click handlers after render
+  setTimeout(() => {
+    const items = document.querySelectorAll('.queue-item');
+    if (items[0]) items[0].classList.add('active');
+  }, 50);
+}
+
+function deactivateDemoMode() {
+  document.getElementById('demo-banner').style.display = 'none';
+  document.getElementById('demo-btn').style.display = '';
+  // Restore original data
+  queueData.antichurn = [
+    { name:'Marie Lecomte', amount:'12€/mois', signal:'Prél. refusé J-3', priority:'high', time:'Il y a 3j', badge:'antichurn', active:true },
+    { name:'Pierre Dubois', amount:'20€/mois', signal:'Signal annulation', priority:'high', time:'Hier', badge:'antichurn' },
+    { name:'Françoise Martin', amount:'8€/mois', signal:'Prél. refusé J-7', priority:'med', time:'Il y a 1j', badge:'antichurn' },
+    { name:'Jacques Leroy', amount:'15€/mois', signal:'Pas prélevé 2 mois', priority:'med', time:'Il y a 2j', badge:'antichurn' },
+    { name:'Nathalie Durand', amount:'5€/mois', signal:'Prél. refusé J-1', priority:'high', time:'Hier', badge:'antichurn' },
+  ];
+  setTab('antichurn');
+}
+</script>
+</body>
+</html>
