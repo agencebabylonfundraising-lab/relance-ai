@@ -47,7 +47,7 @@
     /* ═══ HERO ═══ */
     .hero { max-width:1100px; margin:0 auto; padding:80px 40px 60px; text-align:center; }
     .hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--blue-light); border:1px solid var(--blue-mid); border-radius:20px; padding:6px 14px; font-size:13px; font-weight:600; color:var(--blue-dark); margin-bottom:24px; }
-    .hero-title { font-size:52px; font-weight:900; color:var(--gray-900); letter-spacing:-1.5px; line-height:1.1; margin-bottom:20px; }
+    .hero-title { font-size:clamp(32px, 5vw, 52px); font-weight:900; color:var(--gray-900); letter-spacing:-1.5px; line-height:1.1; margin-bottom:20px; }
     .hero-title .accent { color:var(--blue); }
     .hero-title .underline { text-decoration:underline; text-decoration-color:var(--blue-mid); text-underline-offset:6px; }
     .hero-sub { font-size:20px; color:var(--gray-600); max-width:680px; margin:0 auto 36px; line-height:1.5; font-weight:400; }
@@ -554,7 +554,36 @@
         .script-opt { padding:8px 16px;border:2px solid #e5e7eb;border-radius:8px;background:white;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#374151;cursor:pointer;transition:all .15s; }
         .script-opt:hover { border-color:#2563eb;color:#2563eb; }
         .script-opt.sel { border-color:#2563eb;background:#eff6ff;color:#2563eb;font-weight:700; }
-      </style>
+      
+    /* MOBILE — max-width 768px */
+    @media (max-width: 768px) {
+      nav, .navbar, header nav { flex-wrap: wrap; padding: 12px 16px; gap: 8px; }
+      .nav-links, .nav-menu { display: none; }
+      .nav-cta, .btn-nav { font-size: 12px; padding: 8px 14px; }
+      .hero, section.hero { padding: 60px 20px 40px; min-height: auto; }
+      .hero h1, .hero-title { font-size: clamp(28px, 8vw, 48px) !important; line-height: 1.2; }
+      .hero-sub, .hero p { font-size: 15px !important; }
+      .hero-actions, .cta-group { flex-direction: column; gap: 10px; }
+      .hero-actions a, .cta-group a, .hero-actions button { width: 100%; text-align: center; }
+      .grid, .features-grid, .cards-grid, .pricing-grid, .two-col, .three-col, .stats-grid, .testimonials-grid { grid-template-columns: 1fr !important; }
+      section, .section { padding: 40px 20px !important; }
+      .trust-bar, .stats-bar, .social-proof { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
+      .feature-card, .card { padding: 20px !important; }
+      .mockup, .dashboard-preview, .browser-mockup { transform: scale(0.7); transform-origin: top center; margin-bottom: -60px; }
+      .pricing-card { margin: 0 !important; }
+      footer, .footer { flex-direction: column; text-align: center; gap: 16px; padding: 24px 20px; }
+      .footer-grid, .footer-cols { grid-template-columns: 1fr 1fr !important; }
+      .calculator, .form-section { padding: 20px !important; }
+      img { max-width: 100%; height: auto; }
+      .particle, .blob, .hero-blob { display: none; }
+      .lang-toggle { font-size: 11px; padding: 4px 8px; }
+    }
+    /* SMALL MOBILE — max-width 480px */
+    @media (max-width: 480px) {
+      .hero h1, .hero-title { font-size: 26px !important; }
+      .mockup, .dashboard-preview, .browser-mockup { display: none; }
+    }
+</style>
 
       <span class="script-sel-label">Motif du risque</span>
       <div class="script-opts" id="motif-opts">
