@@ -204,8 +204,15 @@
 <!-- ═══════════════ NAV ═══════════════ -->
 <nav>
   <a href="#" class="nav-logo">
-    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-    <span class="logo-text">relance<span>.ai</span></span>
+    <svg viewBox="0 0 150 36" style="height:30px;display:block;" xmlns="http://www.w3.org/2000/svg">
+      <!-- Upward arrow suggesting revival/relance -->
+      <polygon points="12,28 20,8 28,28 22,28 22,36 18,36 18,28" fill="#2563eb" opacity="0.15"/>
+      <polygon points="14,26 20,10 26,26 21,26 21,34 19,34 19,26" fill="#2563eb" opacity="0.5"/>
+      <polygon points="16,24 20,12 24,24 21,24 21,32 19,32 19,24" fill="#2563eb"/>
+      <!-- Wordmark -->
+      <text x="36" y="25" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="19" fill="#111827" letter-spacing="-0.5">relance</text>
+      <text x="106" y="25" font-family="Inter,system-ui,sans-serif" font-weight="400" font-size="19" fill="#2563eb" letter-spacing="-0.3">.ai</text>
+    </svg>
   </a>
   <div class="nav-links">
     <a href="#solution" class="nav-link">Solution</a>
@@ -217,18 +224,23 @@
   <div class="nav-right">
     <a href="dashboard.html" class="btn btn-ghost">Démo live →</a>
     <a href="#" class="btn btn-primary">Demander un accès</a>
+    <button class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid var(--gray-300);color:var(--gray-500);padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.05em;margin-left:4px;">EN</button>
   </div>
 </nav>
+
+<!-- STATS BAR -->
+<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 5%;text-align:center;">
+  <span style="font-size:13px;font-weight:600;color:#1d4ed8;" data-fr="Plus de 10 000 appels traités · Taux de sauvegarde moyen : 31% · 🔒 Données hébergées en France · RGPD conforme" data-en="10,000+ calls processed · Average save rate: 31% · 🔒 Data hosted in France · GDPR compliant">Plus de 10 000 appels traités · Taux de sauvegarde moyen : 31% · 🔒 Données hébergées en France · RGPD conforme</span>
+</div>
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section style="padding-top:80px;padding-bottom:60px;">
   <div style="text-align:center;">
     <div class="hero-badge">🇫🇷 Conçu pour le télémarketing caritatif français · Cadre Claire</div>
-    <h1 class="hero-title">
-      Le premier outil qui<br><span class="accent underline">apprend de chaque appel</span><br>pour rendre le suivant meilleur
+    <h1 class="hero-title" data-fr="Chaque appel compte.<br><span class='accent underline'>relance.ai vous aide à ne plus en rater un.</span>" data-en="Every call counts.<br><span class='accent underline'>relance.ai helps you miss none of them.</span>">Chaque appel compte.<br><span class="accent underline">relance.ai vous aide à ne plus en rater un.</span>
     </h1>
-    <p class="hero-sub">
-      relance.ai est la plateforme de calling construite <strong>de zéro pour les associations françaises</strong>. Scripts intelligents, briefing IA, conformité RGPD intégrée — tout ce que les outils génériques ne savent pas faire.
+    <p class="hero-sub" data-fr="La plateforme d'appels outbound pour les ONG. Scripts intelligents, briefing IA, conformité RGPD intégrée — tout ce que les outils génériques ne savent pas faire." data-en="Outbound calling platform built for nonprofits. Smart scripts, AI briefing, built-in GDPR compliance — everything generic tools can't do.">
+      La plateforme d'appels outbound pour les ONG. Scripts intelligents, briefing IA, conformité RGPD intégrée — tout ce que les outils génériques ne savent pas faire.
     </p>
     <div class="hero-ctas">
       <a href="dashboard.html" class="btn btn-primary btn-xl">Voir le dashboard agent →</a>
@@ -765,8 +777,19 @@
     <a href="#">RGPD & Conformité</a>
     <a href="#">Contact</a>
   </div>
-  <div class="footer-bottom">Construit par BABYLON Group · Basé sur le cadre expert de Claire · 2026</div>
+  <div class="footer-bottom">Construit par <strong>BABYLON Group</strong> · Basé sur le cadre expert de Claire · 🔒 Hébergé en France · RGPD conforme · © 2026</div>
 </footer>
+<script>
+  let currentLang = 'fr';
+  function toggleLang() {
+    currentLang = currentLang === 'fr' ? 'en' : 'fr';
+    document.querySelectorAll('[data-fr]').forEach(el => {
+      el.innerHTML = currentLang === 'fr' ? el.dataset.fr : el.dataset.en;
+    });
+    const toggle = document.querySelector('.lang-toggle');
+    if (toggle) toggle.textContent = currentLang === 'fr' ? 'EN' : 'FR';
+  }
+</script>
 
 </body>
 </html>
