@@ -256,6 +256,150 @@
   </div>
 </section>
 
+<!-- ═══════════════ SCRIPT DE LA SEMAINE ═══════════════ -->
+<section id="script-semaine" style="background:white;max-width:100%;padding:48px 0;border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);">
+  <div style="max-width:900px;margin:0 auto;padding:0 40px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);">Gratuit — Cette semaine</span>
+      <span style="background:var(--success-light);color:var(--success);font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;letter-spacing:.06em;">NOUVEAU</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;">
+      <div>
+        <h2 style="font-size:clamp(20px,3vw,28px);font-weight:900;color:var(--gray-900);letter-spacing:-.5px;margin-bottom:8px;">📋 Script de la semaine</h2>
+        <p style="font-size:14px;color:var(--gray-500);margin-bottom:0;">Semaine du 23 mars 2026 · Nouveau script chaque lundi · Gratuit</p>
+      </div>
+      <!-- weekly subscribe -->
+      <div id="semaine-sub-wrap" style="min-width:280px;">
+        <div id="semaine-sub-form">
+          <p style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">✉️ Recevoir les scripts chaque semaine</p>
+          <div style="display:flex;gap:6px;">
+            <input type="email" id="semaineEmail" placeholder="votre@ong.fr"
+              style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-300);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s;"
+              onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--gray-300)'"/>
+            <button onclick="subscribeSemaine()" style="background:var(--blue);color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">S'abonner</button>
+          </div>
+        </div>
+        <div id="semaine-sub-success" style="display:none;background:var(--success-light);border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;color:var(--success);">
+          ✅ Abonné ! Le prochain script arrive lundi.
+        </div>
+      </div>
+    </div>
+
+    <!-- Script card -->
+    <div style="background:linear-gradient(135deg,#f0f9ff,#eff6ff);border:1.5px solid #bfdbfe;border-radius:16px;padding:28px 32px;margin-top:24px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-20px;right:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+      <div style="display:flex;align-items:flex-start;gap:16px;">
+        <div style="background:var(--blue);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,.25);">🔴</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="background:rgba(220,38,38,.1);color:var(--danger);font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;">Anti-churn</span>
+            <span style="font-size:12px;color:var(--gray-500);">Profil : Donateur qui réduit son prélèvement sans prévenir</span>
+          </div>
+          <div style="font-size:17px;font-weight:800;color:var(--gray-900);margin-bottom:14px;line-height:1.3;">Script Anti-churn — Réduction silencieuse</div>
+
+          <!-- Phase 1 preview -->
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <span style="background:var(--blue);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">OUVERTURE</span>
+              <span style="font-size:11px;color:var(--gray-400);">Phase 1 · 0–30 sec</span>
+            </div>
+            <div style="background:white;border:1px solid #dbeafe;border-radius:10px;padding:14px 16px;font-size:14px;color:var(--gray-700);line-height:1.65;font-style:italic;">
+              "Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que j'ai remarqué un changement sur votre prélèvement — j'espère que tout va bien de votre côté ?"
+            </div>
+          </div>
+
+          <!-- Locked phases -->
+          <div style="position:relative;border:2px dashed #d1d5db;border-radius:12px;overflow:hidden;" id="semaine-locked">
+            <div style="filter:blur(4px);user-select:none;pointer-events:none;padding:16px;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                <span style="background:var(--gray-300);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">LÉGITIMITÉ</span>
+              </div>
+              <div style="background:var(--gray-100);border-radius:8px;padding:12px;font-size:13px;color:var(--gray-400);">Valider l'ancienneté du donateur, remercier pour sa fidélité sans mentionner le problème directement...</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px;">
+                <span style="background:var(--gray-300);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">ÉCOUTE</span>
+              </div>
+              <div style="background:var(--gray-100);border-radius:8px;padding:12px;margin-top:6px;font-size:13px;color:var(--gray-400);">Découvrir la vraie raison de la réduction — financière, déception, oubli — sans juger...</div>
+            </div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.85);backdrop-filter:blur(2px);padding:20px;text-align:center;">
+              <div style="font-size:22px;margin-bottom:8px;">🔒</div>
+              <div style="font-size:15px;font-weight:800;color:var(--gray-900);margin-bottom:5px;">5 phases restantes</div>
+              <div style="font-size:12px;color:var(--gray-500);margin-bottom:16px;">Légitimité · Écoute · Résolution · Proposition · Clôture</div>
+              <button onclick="openSemaineModal()" style="background:var(--blue);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">Lire la suite →</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEMAINE MODAL -->
+<div id="semaine-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:18px;padding:36px;max-width:440px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2);position:relative;">
+    <button onclick="document.getElementById('semaine-modal').style.display='none'" style="position:absolute;top:14px;right:16px;background:var(--gray-100);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--gray-500);font-size:16px;">×</button>
+    <div id="semaine-modal-form">
+      <div style="font-size:28px;margin-bottom:12px;">📋</div>
+      <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">Recevoir le script complet</div>
+      <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;line-height:1.6;">Les 6 phases du script Anti-churn "Réduction silencieuse" vous seront envoyées par email instantanément.</div>
+      <input type="email" id="semaine-modal-email" placeholder="votre@organisation.fr"
+        style="width:100%;padding:11px 14px;border:2px solid #e5e7eb;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;outline:none;margin-bottom:12px;transition:border-color .15s;"
+        onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'"/>
+      <button onclick="submitSemaineLead()" style="width:100%;padding:12px;background:var(--blue);color:white;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">Recevoir le script complet →</button>
+      <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:10px;">Aucun spam · Désabonnement en 1 clic</p>
+    </div>
+    <div id="semaine-modal-success" style="display:none;text-align:center;">
+      <div style="font-size:44px;margin-bottom:14px;">✅</div>
+      <div style="font-size:18px;font-weight:800;color:var(--success);margin-bottom:8px;">Script en route !</div>
+      <div style="font-size:13px;color:var(--gray-500);">Les 6 phases complètes arrivent dans votre boîte mail dans 2 minutes.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openSemaineModal() {
+    document.getElementById('semaine-modal').style.display = 'flex';
+  }
+
+  async function submitSemaineLead() {
+    const email = document.getElementById('semaine-modal-email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('semaine-modal-email').style.borderColor = '#dc2626';
+      setTimeout(() => document.getElementById('semaine-modal-email').style.borderColor = '', 1500);
+      return;
+    }
+    const lead = { email, product: 'relance.ai', source: 'script-semaine-modal', week: '2026-03-23', timestamp: new Date().toISOString() };
+    try {
+      await fetch('/api/leads/relance-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
+    } catch(e) {
+      const stored = JSON.parse(localStorage.getItem('relance-semaine-leads') || '[]');
+      stored.push(lead);
+      localStorage.setItem('relance-semaine-leads', JSON.stringify(stored));
+    }
+    document.getElementById('semaine-modal-form').style.display = 'none';
+    document.getElementById('semaine-modal-success').style.display = 'block';
+  }
+
+  async function subscribeSemaine() {
+    const email = document.getElementById('semaineEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('semaineEmail').style.borderColor = '#dc2626';
+      setTimeout(() => document.getElementById('semaineEmail').style.borderColor = '', 1500);
+      return;
+    }
+    const lead = { email, product: 'relance.ai', source: 'script-semaine-subscribe', timestamp: new Date().toISOString() };
+    try {
+      await fetch('/api/leads/relance-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
+    } catch(e) {
+      const stored = JSON.parse(localStorage.getItem('relance-semaine-leads') || '[]');
+      stored.push(lead);
+      localStorage.setItem('relance-semaine-leads', JSON.stringify(stored));
+    }
+    document.getElementById('semaine-sub-form').style.display = 'none';
+    document.getElementById('semaine-sub-success').style.display = 'block';
+  }
+</script>
+
 <!-- ═══════════════ 4 CALL TYPES ═══════════════ -->
 <section id="solution" style="background:white;max-width:100%;padding:60px 0;">
   <div style="max-width:1100px;margin:0 auto;padding:0 40px;">
