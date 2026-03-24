@@ -197,6 +197,52 @@
     /* UTILS */
     .divider { height:1px; background:var(--gray-200); margin:20px 0; }
     .tag { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-block; }
+
+    /* ===== MOBILE FULL PASS ===== */
+    @media (max-width: 768px) {
+      /* Nav */
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .nav-right { gap: 6px; }
+      .btn-ghost { font-size: 12px; padding: 7px 12px; }
+
+      /* Hero */
+      .hero { padding: 56px 16px 36px; }
+      .hero-title { font-size: clamp(26px, 7vw, 40px) !important; }
+      .hero-sub { font-size: 15px; }
+      .hero-actions { flex-direction: column; gap: 10px; }
+      .hero-actions a, .hero-actions button { width: 100%; text-align: center; justify-content: center; }
+      /* Hide hero mockup on mobile */
+      .hero-mockup, .mockup-preview { display: none; }
+      .hero-content { max-width: 100%; }
+
+      /* Script preview section */
+      .script-preview-container { flex-direction: column; }
+      .script-selectors { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+      .selector-btn { font-size: 12px; padding: 6px 12px; }
+      .script-output { margin-top: 12px; padding: 16px; }
+      .script-phases { gap: 8px; }
+
+      /* Call types grid */
+      .call-types-grid { grid-template-columns: 1fr !important; }
+      .call-type-card { padding: 18px 16px; }
+
+      /* Features grid */
+      .features-grid { grid-template-columns: 1fr !important; gap: 12px; }
+      .feature-card { padding: 20px 16px; }
+
+      /* Semaine section */
+      .semaine-inner { flex-direction: column; }
+      .semaine-subscribe { margin-top: 16px; width: 100%; }
+
+      /* Pricing */
+      .pricing-grid { grid-template-columns: 1fr !important; }
+      .pricing-card.featured { transform: none !important; }
+
+      /* Footer */
+      footer { flex-direction: column; text-align: center; gap: 12px; }
+      .footer-links { justify-content: center; }
+    }
   </style>
 </head>
 <body>
