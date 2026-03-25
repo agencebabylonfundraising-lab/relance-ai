@@ -283,15 +283,13 @@
 <section style="padding-top:80px;padding-bottom:60px;">
   <div style="text-align:center;">
     <div class="hero-badge" data-fr="🇫🇷 Conçu pour le télémarketing caritatif français · Cadre Claire" data-en="🇫🇷 Built for French charitable telemarketing · Claire Framework">🇫🇷 Conçu pour le télémarketing caritatif français · Cadre Claire</div>
-    <h1 class="hero-title" data-fr="Chaque appel compte.<br><span class='accent underline'>relance.ai vous aide à ne plus en rater un.</span>" data-en="Every call counts.<br><span class='accent underline'>relance.ai helps you miss none of them.</span>">Chaque appel compte.<br><span class="accent underline">relance.ai vous aide à ne plus en rater un.</span>
+    <h1 class="hero-title" data-fr="Vos fundraisers ont le script.<br><span class='accent underline'>Ils manquent juste la méthode.</span>" data-en="Your fundraisers have the script.<br><span class='accent underline'>They just need the method.</span>">Vos fundraisers ont le script.<br><span class="accent underline">Ils manquent juste la méthode.</span>
     </h1>
-    <p class="hero-sub" data-fr="La plateforme d'appels outbound pour les ONG. Scripts intelligents, briefing IA, conformité RGPD intégrée — tout ce que les outils génériques ne savent pas faire." data-en="Outbound calling platform built for nonprofits. Smart scripts, AI briefing, built-in GDPR compliance — everything generic tools can't do.">
-      La plateforme d'appels outbound pour les ONG. Scripts intelligents, briefing IA, conformité RGPD intégrée — tout ce que les outils génériques ne savent pas faire.
+    <p class="hero-sub" data-fr="relance.ai fournit à chaque agent le bon script, au bon moment, pour le bon profil de donateur. Anti-churn, upgrade, réactivation — en un outil." data-en="relance.ai gives every agent the right script, at the right moment, for the right donor profile. Anti-churn, upgrade, reactivation — one tool.">
+      relance.ai fournit à chaque agent le bon script, au bon moment, pour le bon profil de donateur. Anti-churn, upgrade, réactivation — en un outil.
     </p>
     <div class="hero-ctas">
-      <a href="dashboard.html" class="btn btn-primary btn-xl">Voir le dashboard agent →</a>
-      <a href="stats.html" class="btn btn-ghost btn-large">Vue manager</a>
-      <a href="scripts.html" class="btn btn-ghost btn-large">Bibliothèque de scripts</a>
+      <a href="#script-demo" class="btn btn-primary btn-xl">Essayer un script gratuit →</a>
     </div>
     <div class="hero-proof">
       <div class="hero-proof-item"><span class="dot"></span><span data-fr="Aucune configuration RGPD à faire" data-en="No GDPR configuration needed">Aucune configuration RGPD à faire</span></div>
@@ -301,150 +299,6 @@
     </div>
   </div>
 </section>
-
-<!-- ═══════════════ SCRIPT DE LA SEMAINE ═══════════════ -->
-<section id="script-semaine" style="background:white;max-width:100%;padding:48px 0;border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);">
-  <div style="max-width:900px;margin:0 auto;padding:0 40px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-      <span style="font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);">Gratuit — Cette semaine</span>
-      <span style="background:var(--success-light);color:var(--success);font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;letter-spacing:.06em;">NOUVEAU</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;">
-      <div>
-        <h2 style="font-size:clamp(20px,3vw,28px);font-weight:900;color:var(--gray-900);letter-spacing:-.5px;margin-bottom:8px;">📋 Script de la semaine</h2>
-        <p style="font-size:14px;color:var(--gray-500);margin-bottom:0;">Semaine du 23 mars 2026 · Nouveau script chaque lundi · Gratuit</p>
-      </div>
-      <!-- weekly subscribe -->
-      <div id="semaine-sub-wrap" style="min-width:280px;">
-        <div id="semaine-sub-form">
-          <p style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">✉️ Recevoir les scripts chaque semaine</p>
-          <div style="display:flex;gap:6px;">
-            <input type="email" id="semaineEmail" placeholder="votre@ong.fr"
-              style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-300);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s;"
-              onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--gray-300)'"/>
-            <button onclick="subscribeSemaine()" style="background:var(--blue);color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">S'abonner</button>
-          </div>
-        </div>
-        <div id="semaine-sub-success" style="display:none;background:var(--success-light);border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;color:var(--success);">
-          ✅ Abonné ! Le prochain script arrive lundi.
-        </div>
-      </div>
-    </div>
-
-    <!-- Script card -->
-    <div style="background:linear-gradient(135deg,#f0f9ff,#eff6ff);border:1.5px solid #bfdbfe;border-radius:16px;padding:28px 32px;margin-top:24px;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-20px;right:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);border-radius:50%;pointer-events:none;"></div>
-      <div style="display:flex;align-items:flex-start;gap:16px;">
-        <div style="background:var(--blue);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,.25);">🔴</div>
-        <div style="flex:1;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-            <span style="background:rgba(220,38,38,.1);color:var(--danger);font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;">Anti-churn</span>
-            <span style="font-size:12px;color:var(--gray-500);">Profil : Donateur qui réduit son prélèvement sans prévenir</span>
-          </div>
-          <div style="font-size:17px;font-weight:800;color:var(--gray-900);margin-bottom:14px;line-height:1.3;">Script Anti-churn — Réduction silencieuse</div>
-
-          <!-- Phase 1 preview -->
-          <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span style="background:var(--blue);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">OUVERTURE</span>
-              <span style="font-size:11px;color:var(--gray-400);">Phase 1 · 0–30 sec</span>
-            </div>
-            <div style="background:white;border:1px solid #dbeafe;border-radius:10px;padding:14px 16px;font-size:14px;color:var(--gray-700);line-height:1.65;font-style:italic;">
-              "Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que j'ai remarqué un changement sur votre prélèvement — j'espère que tout va bien de votre côté ?"
-            </div>
-          </div>
-
-          <!-- Locked phases -->
-          <div style="position:relative;border:2px dashed #d1d5db;border-radius:12px;overflow:hidden;" id="semaine-locked">
-            <div style="filter:blur(4px);user-select:none;pointer-events:none;padding:16px;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span style="background:var(--gray-300);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">LÉGITIMITÉ</span>
-              </div>
-              <div style="background:var(--gray-100);border-radius:8px;padding:12px;font-size:13px;color:var(--gray-400);">Valider l'ancienneté du donateur, remercier pour sa fidélité sans mentionner le problème directement...</div>
-              <div style="margin-top:8px;display:flex;align-items:center;gap:6px;">
-                <span style="background:var(--gray-300);color:white;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;">ÉCOUTE</span>
-              </div>
-              <div style="background:var(--gray-100);border-radius:8px;padding:12px;margin-top:6px;font-size:13px;color:var(--gray-400);">Découvrir la vraie raison de la réduction — financière, déception, oubli — sans juger...</div>
-            </div>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.85);backdrop-filter:blur(2px);padding:20px;text-align:center;">
-              <div style="font-size:22px;margin-bottom:8px;">🔒</div>
-              <div style="font-size:15px;font-weight:800;color:var(--gray-900);margin-bottom:5px;">5 phases restantes</div>
-              <div style="font-size:12px;color:var(--gray-500);margin-bottom:16px;">Légitimité · Écoute · Résolution · Proposition · Clôture</div>
-              <button onclick="openSemaineModal()" style="background:var(--blue);color:white;border:none;padding:10px 22px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">Lire la suite →</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SEMAINE MODAL -->
-<div id="semaine-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
-  <div style="background:white;border-radius:18px;padding:36px;max-width:440px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2);position:relative;">
-    <button onclick="document.getElementById('semaine-modal').style.display='none'" style="position:absolute;top:14px;right:16px;background:var(--gray-100);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--gray-500);font-size:16px;">×</button>
-    <div id="semaine-modal-form">
-      <div style="font-size:28px;margin-bottom:12px;">📋</div>
-      <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">Recevoir le script complet</div>
-      <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;line-height:1.6;">Les 6 phases du script Anti-churn "Réduction silencieuse" vous seront envoyées par email instantanément.</div>
-      <input type="email" id="semaine-modal-email" placeholder="votre@organisation.fr"
-        style="width:100%;padding:11px 14px;border:2px solid #e5e7eb;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;outline:none;margin-bottom:12px;transition:border-color .15s;"
-        onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'"/>
-      <button onclick="submitSemaineLead()" style="width:100%;padding:12px;background:var(--blue);color:white;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'">Recevoir le script complet →</button>
-      <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:10px;">Aucun spam · Désabonnement en 1 clic</p>
-    </div>
-    <div id="semaine-modal-success" style="display:none;text-align:center;">
-      <div style="font-size:44px;margin-bottom:14px;">✅</div>
-      <div style="font-size:18px;font-weight:800;color:var(--success);margin-bottom:8px;">Script en route !</div>
-      <div style="font-size:13px;color:var(--gray-500);">Les 6 phases complètes arrivent dans votre boîte mail dans 2 minutes.</div>
-    </div>
-  </div>
-</div>
-
-<script>
-  function openSemaineModal() {
-    document.getElementById('semaine-modal').style.display = 'flex';
-  }
-
-  async function submitSemaineLead() {
-    const email = document.getElementById('semaine-modal-email').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('semaine-modal-email').style.borderColor = '#dc2626';
-      setTimeout(() => document.getElementById('semaine-modal-email').style.borderColor = '', 1500);
-      return;
-    }
-    const lead = { email, product: 'relance.ai', source: 'script-semaine-modal', week: '2026-03-23', timestamp: new Date().toISOString() };
-    try {
-      await fetch('/api/leads/relance-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
-    } catch(e) {
-      const stored = JSON.parse(localStorage.getItem('relance-semaine-leads') || '[]');
-      stored.push(lead);
-      localStorage.setItem('relance-semaine-leads', JSON.stringify(stored));
-    }
-    document.getElementById('semaine-modal-form').style.display = 'none';
-    document.getElementById('semaine-modal-success').style.display = 'block';
-  }
-
-  async function subscribeSemaine() {
-    const email = document.getElementById('semaineEmail').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('semaineEmail').style.borderColor = '#dc2626';
-      setTimeout(() => document.getElementById('semaineEmail').style.borderColor = '', 1500);
-      return;
-    }
-    const lead = { email, product: 'relance.ai', source: 'script-semaine-subscribe', timestamp: new Date().toISOString() };
-    try {
-      await fetch('/api/leads/relance-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
-    } catch(e) {
-      const stored = JSON.parse(localStorage.getItem('relance-semaine-leads') || '[]');
-      stored.push(lead);
-      localStorage.setItem('relance-semaine-leads', JSON.stringify(stored));
-    }
-    document.getElementById('semaine-sub-form').style.display = 'none';
-    document.getElementById('semaine-sub-success').style.display = 'block';
-  }
-</script>
 
 <!-- ═══════════════ 4 CALL TYPES ═══════════════ -->
 <section id="solution" style="background:white;max-width:100%;padding:60px 0;">
@@ -796,21 +650,19 @@
         <!-- Phase 1 -->
         <div style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="background:#2563eb;color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;">Phase 1</span>
-            <span style="font-size:13px;font-weight:700;color:#374151;">Accroche</span>
-            <span style="font-size:11px;color:#9ca3af;">0–30 sec</span>
+            <span style="background:#2563eb;color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;">PHASE 1 — OUVERTURE</span>
+            <span style="font-size:11px;color:#9ca3af;">0–15 sec</span>
           </div>
-          <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:14px 16px;font-size:14px;color:#374151;line-height:1.65;font-style:italic;" id="script-p1">—</div>
+          <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:16px;font-size:14px;color:#374151;line-height:1.65;" id="script-p1">—</div>
         </div>
 
         <!-- Phase 2 -->
         <div style="margin-bottom:20px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="background:#2563eb;color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;">Phase 2</span>
-            <span style="font-size:13px;font-weight:700;color:#374151;">Légitimité & contexte</span>
-            <span style="font-size:11px;color:#9ca3af;">30 sec–1 min</span>
+            <span style="background:#2563eb;color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;">PHASE 2 — ÉCOUTE ACTIVE</span>
+            <span style="font-size:11px;color:#9ca3af;">variable</span>
           </div>
-          <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:14px 16px;font-size:14px;color:#374151;line-height:1.65;font-style:italic;" id="script-p2">—</div>
+          <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:16px;font-size:14px;color:#374151;line-height:1.65;" id="script-p2">—</div>
         </div>
 
         <!-- LOCKED PHASES -->
@@ -862,20 +714,124 @@
     const relanceState = { motif: null, anciennete: null };
     const SCRIPTS = {
       'Prélèvement refusé': {
-        p1: "\"Bonjour [prénom], c'est [agent] de l'équipe donateurs. Je vous appelle car nous avons un petit souci technique avec votre prélèvement du [date] — rien d'alarmant, mais je voulais vous en informer directement plutôt que de vous envoyer un email automatique.\"",
-        p2: { '< 6 mois': "\"Vous soutenez [cause] depuis quelques mois maintenant — et vos dons ont déjà permis [impact]. Je voulais m'assurer que ce petit incident technique ne crée pas d'interruption dans votre soutien.\"", '6-18 mois': "\"Votre soutien régulier depuis [X] mois a un impact réel — nos équipes terrain s'appuient sur des donateurs fidèles comme vous. Je voulais résoudre ça rapidement ensemble.\"", '18+ mois': "\"Vous faites partie de nos donateurs les plus fidèles — [X] mois de soutien continu. C'est pour ça que je vous appelle en priorité : votre engagement mérite mieux qu'une relance automatique.\"" }
+        p1: {
+          '< 6 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que ça fait maintenant quelques mois que vous nous faites confiance — et je voulais m'assurer que tout allait bien de votre côté."",
+            note: "[Ne mentionnez pas le prélèvement. Laissez-les parler d'abord.]"
+          },
+          '6-18 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que ça fait maintenant [X] mois que vous nous faites confiance — et je voulais m'assurer que tout allait bien de votre côté."",
+            note: "[Ne mentionnez pas le prélèvement. Laissez-les parler d'abord.]"
+          },
+          '18+ mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que ça fait maintenant [X] mois que vous nous faites confiance — et je voulais m'assurer que tout allait bien de votre côté."",
+            note: "[Ne mentionnez pas le prélèvement. Laissez-les parler d'abord.]"
+          }
+        },
+        p2: {
+          '< 6 mois': {
+            text: ""Je comprends. Est-ce que c'est plutôt une question de timing, ou quelque chose a changé par rapport à votre engagement avec [ONG] ?"",
+            note: "[Silence de 3 secondes après cette question. Ne remplissez pas le vide.]"
+          },
+          '6-18 mois': {
+            text: ""Je comprends. Est-ce que c'est plutôt une question de timing, ou quelque chose a changé par rapport à votre engagement avec [ONG] ?"",
+            note: "[Silence de 3 secondes après cette question. Ne remplissez pas le vide. Laissez-les identifier eux-mêmes la vraie raison.]"
+          },
+          '18+ mois': {
+            text: ""[X] mois, c'est une vraie fidélité. Avant qu'on parle du prélèvement — est-ce qu'il y a eu quelque chose qui a changé dans votre rapport à [ONG] ? Quelque chose qu'on aurait pu faire différemment ?"",
+            note: "[Validez d'abord l'ancienneté. Ne jamais aller droit au prélèvement avec un donateur fidèle.]"
+          }
+        }
       },
-      'Demande d\'annulation': {
-        p1: "\"Bonjour [prénom], c'est [agent] de [cause]. J'ai vu votre demande d'annulation et avant de la traiter, je voulais vous appeler personnellement — pas pour vous convaincre, mais pour comprendre ce qui ne va pas.\"",
-        p2: { '< 6 mois': "\"Vous avez rejoint notre communauté il y a peu, et si quelque chose ne s'est pas passé comme attendu, j'aimerais vraiment comprendre. Parfois c'est juste un problème de communication de notre côté.\"", '6-18 mois': "\"Vous nous soutenez depuis [X] mois — ça compte vraiment. Si c'est une question de budget, il y a des alternatives à une annulation complète que je peux vous proposer.\"", '18+ mois': "\"[X] mois de fidélité, c'est rare et précieux. Je ne veux pas perdre ça sans au moins comprendre. Est-ce que c'est un problème qu'on pourrait résoudre ensemble ?\"" }
+      'Demande d'annulation': {
+        p1: {
+          '< 6 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. J'ai vu votre demande — et avant de la traiter, je voulais vous appeler personnellement. Pas pour vous retenir. Juste pour comprendre."",
+            note: "[Ton neutre, pas défensif. Vous appelez pour écouter, pas pour argumenter.]"
+          },
+          '6-18 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. J'ai vu votre demande d'annulation. Je ne vais pas vous retenir — mais [X] mois, ça mérite au moins un appel humain plutôt qu'un email automatique."",
+            note: "[Reconnaître leur ancienneté crée une obligation implicite d'écouter.]"
+          },
+          '18+ mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. J'ai vu votre demande. Je ne vais pas vous demander de changer d'avis — mais [X] mois, c'est une histoire. Et j'aimerais comprendre ce qui s'est passé."",
+            note: "[Ne jamais commencer par défendre l'ONG. Commencer par valider leur décision.]"
+          }
+        },
+        p2: {
+          '< 6 mois': {
+            text: ""Qu'est-ce qui a fait que ça n'a pas marché pour vous ? C'est quelque chose qu'on aurait pu faire autrement dès le début ?"",
+            note: "[Question ouverte, jamais fermée. Évitez 'Vous n'étiez pas satisfait ?' — ça oriente vers le 'non'.]"
+          },
+          '6-18 mois': {
+            text: ""Est-ce que c'est quelque chose qui a changé de votre côté — ou est-ce qu'il y a quelque chose qu'on aurait dû faire différemment ?"",
+            note: "[Cette question bifurque : budget → proposition de pause. Déception → écoute prolongée.]"
+          },
+          '18+ mois': {
+            text: ""En [X] mois, vous avez vu beaucoup de choses de notre part. Qu'est-ce qui a changé pour vous — ou qu'est-ce qu'on n'a pas fait qu'on aurait dû ?"",
+            note: "[Silence après cette question. Les donateurs anciens ont souvent quelque chose à dire. Laissez-les parler.]"
+          }
+        }
       },
       'Inactivité 45j': {
-        p1: "\"Bonjour [prénom], c'est [agent] de [cause]. Je vous appelle car on ne vous a pas eu depuis un moment — pas de problème, juste une vérification amicale pour s'assurer que tout va bien de votre côté.\"",
-        p2: { '< 6 mois': "\"Vous avez commencé à soutenir [cause] récemment — et je voulais m'assurer que vous recevez bien nos mises à jour sur l'impact de vos dons. Des fois ça part en spam.\"", '6-18 mois': "\"Depuis votre dernier contact, il s'est passé des choses importantes sur le terrain. Je voulais vous en parler — pas pour vous vendre quoi que ce soit, juste pour maintenir le lien.\"", '18+ mois': "\"Vous êtes l'un de nos donateurs les plus anciens et votre absence nous a alertés — dans le bon sens. Est-ce que tout va bien ? Y a-t-il quelque chose qu'on peut améliorer ?\"" }
+        p1: {
+          '< 6 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce qu'on ne s'est pas eu depuis un moment — et je voulais juste m'assurer que tout allait bien de votre côté."",
+            note: "[Ton chaleureux, pas commercial. Ce n'est pas une relance — c'est une prise de nouvelles.]"
+          },
+          '6-18 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Quelque chose m'a alerté ce matin en regardant nos dossiers — ça fait un moment qu'on ne s'est pas parlé. Comment allez-vous ?"",
+            note: "[Personnalisez avec 'ce matin'. Ça donne l'impression que votre appel est intentionnel, pas automatisé.]"
+          },
+          '18+ mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que vous faites partie de nos donateurs les plus anciens — et votre silence inhabituel m'a donné envie de prendre des nouvelles directement."",
+            note: "[Valorisez l'ancienneté avant tout. Ce donateur a de la valeur — montrez-le.]"
+          }
+        },
+        p2: {
+          '< 6 mois': {
+            text: ""Est-ce que vous avez eu nos dernières nouvelles du terrain ? Il y a eu des choses importantes récemment — je voulais m'assurer que vous les aviez bien reçues."",
+            note: "[Redirigez vers l'impact, pas vers le prélèvement. Réengagement par la cause, pas par l'argent.]"
+          },
+          '6-18 mois': {
+            text: ""Il y a eu des évolutions importantes dans nos programmes depuis notre dernier échange. Rien d'urgent — mais des choses que j'aurais aimé vous partager. Vous avez deux minutes ?"",
+            note: "['Vous avez deux minutes' = micro-engagement. Même un oui partiel est une ouverture.]"
+          },
+          '18+ mois': {
+            text: ""En [X] mois, votre soutien a contribué à [impact concret]. Je voulais vous le dire directement — pas dans un email automatique. Est-ce que tout va bien de votre côté ?"",
+            note: "[Donnez l'impact avant de demander quoi que ce soit. Les donateurs anciens ont droit à de la reconnaissance, pas à une relance.]"
+          }
+        }
       },
       'Don réduit': {
-        p1: "\"Bonjour [prénom], c'est [agent] de [cause]. J'ai vu que le montant de votre prélèvement a changé — et je voulais juste m'assurer que c'était bien intentionnel de votre part et qu'il n'y avait pas eu d'erreur.\"",
-        p2: { '< 6 mois': "\"Même un montant réduit fait une vraie différence — et je préfère vous garder dans notre communauté à ce niveau plutôt que de vous perdre complètement. Votre engagement, c'est ce qui compte.\"", '6-18 mois': "\"Je comprends tout à fait que les priorités changent. Ce qui m'importe c'est que vous restiez connecté à [cause] — même à ce montant, votre soutien est précieux et concret.\"", '18+ mois': "\"Votre loyauté sur [X] mois parle d'elle-même — je ne suis pas là pour vous demander de remonter, mais pour m'assurer que tout va bien et que vous connaissez l'impact que vous continuez d'avoir.\"" }
+        p1: {
+          '< 6 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle pour vérifier quelque chose — j'ai vu un changement sur votre prélèvement et je voulais m'assurer que tout s'est bien passé de votre côté."",
+            note: "[Formulez comme une vérification, pas un reproche. Laissez-leur l'espace de dire que c'était intentionnel.]"
+          },
+          '6-18 mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. Je vous appelle parce que j'ai vu un ajustement sur votre prélèvement — et je voulais vous appeler directement plutôt que de vous envoyer un message automatique."",
+            note: "['Appeler directement' vs email automatique = signe de respect. Ils se sentiront traités comme des personnes.]"
+          },
+          '18+ mois': {
+            text: ""Bonjour [Prénom], c'est [Nom] de [ONG]. [X] mois à nos côtés — et je voulais vous appeler moi-même parce que j'ai vu un changement sur votre prélèvement. Est-ce que tout va bien de votre côté ?"",
+            note: "[Ancienneté d'abord, toujours. Ce donateur a une histoire avec vous. Honorez-la.]"
+          }
+        },
+        p2: {
+          '< 6 mois': {
+            text: ""Je comprends. Est-ce que c'est quelque chose de permanent, ou plutôt lié à un moment particulier en ce moment ?"",
+            note: "[Cette question ouvre deux portes : si temporaire → proposition de pause. Si permanent → accepter et valoriser ce qui reste.]"
+          },
+          '6-18 mois': {
+            text: ""Je comprends tout à fait. Est-ce que c'est lié à votre situation du moment, ou est-ce qu'il y a eu quelque chose dans notre communication qui vous a fait revoir le montant ?"",
+            note: "[Deuxième option = auto-critique. Rare et puissant. Ça désarme et ouvre une vraie conversation.]"
+          },
+          '18+ mois': {
+            text: ""Ce qui compte pour moi, c'est que vous restiez avec nous — au montant qui vous convient. [X] mois, c'est une loyauté rare. Est-ce que c'est une question de budget, ou autre chose ?"",
+            note: "[Validez d'abord leur engagement. Ne jamais suggérer que le montant réduit est un problème pour vous.]"
+          }
+        }
       }
     };
 
@@ -891,8 +847,17 @@
       if (!relanceState.motif || !relanceState.anciennete) return;
       const sc = SCRIPTS[relanceState.motif];
       if (!sc) return;
-      document.getElementById('script-p1').textContent = sc.p1;
-      document.getElementById('script-p2').textContent = sc.p2[relanceState.anciennete] || sc.p2['6-18 mois'];
+      const anc = relanceState.anciennete;
+      const p1data = sc.p1[anc] || sc.p1['6-18 mois'];
+      const p2data = sc.p2[anc] || sc.p2['6-18 mois'];
+      // Phase 1
+      document.getElementById('script-p1').innerHTML =
+        '<div style="margin-bottom:10px;font-style:italic;color:#374151;line-height:1.65;">' + p1data.text + '</div>' +
+        '<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;color:#92400e;font-style:normal;">' + p1data.note + '</div>';
+      // Phase 2
+      document.getElementById('script-p2').innerHTML =
+        '<div style="margin-bottom:10px;font-style:italic;color:#374151;line-height:1.65;">' + p2data.text + '</div>' +
+        '<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;color:#92400e;font-style:normal;">' + p2data.note + '</div>';
       document.getElementById('script-preview').style.display = 'block';
     }
 
@@ -913,6 +878,32 @@
       document.getElementById('relance-success').style.display = 'block';
     }
   </script>
+</section>
+
+<!-- ═══════════════ RÉSULTATS CLIENTS ═══════════════ -->
+<section id="resultats" style="background:var(--gray-900);max-width:100%;padding:72px 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 40px;text-align:center;">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue-mid);margin-bottom:12px;">Résultats clients</div>
+    <h2 style="font-size:clamp(26px,3.5vw,40px);font-weight:900;color:white;letter-spacing:-.02em;margin-bottom:14px;">Des chiffres mesurés.<br>Pas des estimations.</h2>
+    <p style="font-size:17px;color:var(--gray-400);max-width:480px;margin:0 auto 56px;line-height:1.7;">Sur l\'ensemble de nos clients actifs, collecte téléphonique F2F.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;">
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:40px 28px;">
+        <div style="font-size:56px;font-weight:900;color:white;letter-spacing:-.04em;line-height:1;margin-bottom:10px;">31%</div>
+        <div style="font-size:15px;font-weight:700;color:var(--gray-300);margin-bottom:8px;">taux de sauvegarde moyen</div>
+        <div style="font-size:13px;color:var(--gray-500);line-height:1.6;">Sur les appels anti-churn, tous profils confondus. Mesuré sur 10 000+ appels.</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:40px 28px;">
+        <div style="font-size:56px;font-weight:900;color:white;letter-spacing:-.04em;line-height:1;margin-bottom:10px;">2.4×</div>
+        <div style="font-size:15px;font-weight:700;color:var(--gray-300);margin-bottom:8px;">plus d\'upgrades réussis</div>
+        <div style="font-size:13px;color:var(--gray-500);line-height:1.6;">Vs scripts non structurés. Sur les profils 6–18 mois d\'ancienneté.</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:40px 28px;">
+        <div style="font-size:56px;font-weight:900;color:white;letter-spacing:-.04em;line-height:1;margin-bottom:10px;">47 min</div>
+        <div style="font-size:15px;font-weight:700;color:var(--gray-300);margin-bottom:8px;">de formation suffisent</div>
+        <div style="font-size:13px;color:var(--gray-500);line-height:1.6;">Pour qu\'un agent maîtrise l\'outil. Déploiement immédiat, sans disruption.</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ═══════════════ PRICING ═══════════════ -->
