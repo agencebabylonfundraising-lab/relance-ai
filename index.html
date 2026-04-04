@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>relance.ai — Le premier outil qui apprend de chaque appel caritatif</title>
+  <meta name="description" content="relance.ai équipe chaque agent du bon script au bon moment. Anti-churn, upgrade, réactivation. Conçu pour le télémarketing caritatif français.">
+  <meta property="og:title" content="relance.ai — Scripts intelligents pour le calling caritatif">
+  <meta property="og:description" content="Le premier outil qui apprend de chaque appel. Scripts 6 phases, briefing IA pré-appel, conformité RGPD intégrée. Save rate 30–35%.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agencebabylonfundraising-lab.github.io/relance-ai/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="relance.ai — L'outil de calling caritatif qui apprend">
+  <meta name="twitter:description" content="Scripts intelligents, briefing IA, conformité RGPD. Conçu pour le télémarketing caritatif français.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -994,21 +1002,23 @@
   function setLang(lang) {
     currentLang = lang;
     document.querySelectorAll('[data-fr]').forEach(el => {
-      el.innerHTML = lang === 'fr' ? el.dataset.fr : (el.dataset.en || el.dataset.fr);
+      const val = lang === 'fr' ? el.dataset.fr : (el.dataset.en || el.dataset.fr);
+      const clean = val
+        .replace(/&amp;lt;/g, '<').replace(/&amp;gt;/g, '>')
+        .replace(/&amp;amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+      el.innerHTML = clean;
     });
     document.querySelectorAll('[data-placeholder-fr]').forEach(el => {
       el.placeholder = lang === 'fr' ? el.dataset.placeholderFr : (el.dataset.placeholderEn || el.dataset.placeholderFr);
     });
-    document.querySelectorAll('.lang-toggle').forEach(btn => {
+    document.querySelectorAll('.lang-btn, .lang-toggle').forEach(btn => {
       btn.textContent = lang === 'fr' ? 'EN' : 'FR';
-      btn.setAttribute('aria-label', lang === 'fr' ? 'Switch to English' : 'Passer en français');
     });
     localStorage.setItem('lang', lang);
   }
   function toggleLang() { setLang(currentLang === 'fr' ? 'en' : 'fr'); }
   document.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem('lang');
-    if (saved && saved !== 'fr') setLang(saved);
+    setLang(localStorage.getItem('lang') || 'fr');
   });
 </script>
 
